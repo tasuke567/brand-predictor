@@ -283,3 +283,13 @@ body.dark {
     }
   }
   
+
+  .csv-preview {
+    background: #f4f4f4;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    white-space: pre-wrap;
+    font-family: monospace;
+  }
+  
