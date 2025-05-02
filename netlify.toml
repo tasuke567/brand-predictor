@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[environment]
+  VITE_API_URL = "https://waka-api-hw3h.onrender.com" # 👈 เปลี่ยนเป็น URL ของ backend จริงๆ
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
