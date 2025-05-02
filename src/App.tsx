@@ -191,6 +191,27 @@ const App = () => {
 
   const handleBack = () => setStep((prev) => prev - 1);
 
+  const appMap = {
+    Instagram: "Instagram",
+    TikTok: "TikTok",
+    Facebook: "Facebook",
+    YouTube: "YouTube",
+    "Facebook Messenger": "Facebook Messenger",
+    Spotify: "Spotify",
+    WhatsApp: "WhatsApp",
+    Telegram: "Telegram",
+    Snapchat: "Snapchat",
+    Other: "Other",
+  };
+  const activityMap = {
+    "ดูหนัง / ฟังเพลง": "Watch movies / listen to music",
+    เล่นเกม: "Play games",
+    "ถ่ายรูป / ถ่ายวิดีโอ": "Take photos/videos",
+    "Application บน cloud": "Cloud apps",
+    "ติดต่อสื่อสาร / ประชุมงาน": "Communication/meetings",
+    โซเชียลมีเดีย: "Social media",
+  };
+
   const translateMap = {
     gender: { ชาย: "Male", หญิง: "Female", อื่นๆ: "LGBTQ+" },
     ageRange: {
@@ -247,14 +268,6 @@ const App = () => {
       พนักงานโรงงานอุตสาหกรรม: "Factory worker",
       "เจ้าของธุรกิจ/ธุรกิจส่วนตัว": "Business owner",
     },
-    currentBrand: {
-      Apple: "Apple",
-      Samsung: "Samsung",
-      Oppo: "Oppo",
-      Vivo: "Vivo",
-      Xiaomi: "Xiaomi",
-      Other: "Other",
-    },
   };
 
   // const csvHeaders = [
@@ -274,14 +287,23 @@ const App = () => {
     >;
     return dict[value] || value || "?";
   }
+  function translateList(
+    inputList: string[],
+    map: Record<string, string>
+  ): string {
+    const translated = inputList.map((item) => map[item] || item);
+    return translated.join(", ");
+  }
+
+  
 
   function mapToCsvRow(formData: Record<string, any>): string {
     const row = [
       translate("gender", formData.gender),
       translate("ageRange", formData.ageRange),
       translate("maritalStatus", formData.maritalStatus),
-      translate("activities", formData.activities),
-      translate("apps", formData.apps),
+      translateList(formData.activities, activityMap),
+      translateList(formData.apps, appMap),
       translate("dailyUsage", formData.dailyUsage),
       translate("importance", formData.importance),
       translate("purchaseFactors", formData.purchaseFactors),
@@ -289,7 +311,6 @@ const App = () => {
       translate("onlinePurchaseIssues", formData.onlinePurchaseIssues),
       translate("income", formData.income),
       translate("occupation", formData.occupation),
-      
     ];
     return row.map((v) => `"${v}"`).join(",");
   }
@@ -308,35 +329,17 @@ const App = () => {
       "Purchase_problem",
       "Monthly_income",
       "Occupation",
-     
     ];
-
-    const values = [
-      data.gender,
-      data.ageRange,
-      data.maritalStatus,
-      data.activities.join(", "),
-      data.apps.join(", "),
-      data.dailyUsage,
-      data.importance,
-      data.purchaseFactors,
-      data.satisfaction,
-      data.onlinePurchaseIssues,
-      data.income,
-      data.occupation,
-
-    ];
-
-    return `${headers.join(",")}\n${values.map((v) => `"${v}"`).join(",")}`;
+    const row = mapToCsvRow(data);
+    return `${headers.join(",")}\n${row}`;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const csvContent = mapToCsvRow(formData); // ใช้ฟังก์ชันจากโพสต์ก่อน
     const csv = formDataToCSV(formData);
-    setCsvPreview(csv);
-    const blob = new Blob([csvContent], { type: "text/csv" });
+    setCsvPreview(csv); // ตอนนี้แสดง preview แบบเดียวกับที่ส่งไป
+    const blob = new Blob([csv], { type: "text/csv" });
     const formDataUpload = new FormData();
     formDataUpload.append("file", blob, "predict.csv");
 
