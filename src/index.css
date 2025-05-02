@@ -1,5 +1,5 @@
 /* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
 
 :root {
   --color-bg: #f3f4f6;
@@ -15,7 +15,7 @@
 }
 
 body {
-  font-family: 'Kanit', sans-serif;
+  font-family: "Kanit", sans-serif;
   background-color: var(--color-bg);
   margin: 0;
   padding: 0;
@@ -132,11 +132,21 @@ body.dark {
 }
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-4px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .checkbox-group {
@@ -261,35 +271,45 @@ body.dark {
 }
 
 @keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(20px) translateX(-50%); }
-  10% { opacity: 1; transform: translateY(0) translateX(-50%); }
-  90% { opacity: 1; transform: translateY(0) translateX(-50%); }
-  100% { opacity: 0; transform: translateY(20px) translateX(-50%); }
+  0% {
+    opacity: 0;
+    transform: translateY(20px) translateX(-50%);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px) translateX(-50%);
+  }
 }
 
-
 .fade-transition {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+  animation: fadeIn 0.3s ease-in-out;
+}
 
-  .csv-preview {
-    background: #f4f4f4;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 1rem;
-    white-space: pre-wrap;
-    font-family: monospace;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.csv-preview {
+  background: #f3f4f6;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 0.9rem;
+}
