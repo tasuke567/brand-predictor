@@ -141,7 +141,8 @@ const App = () => {
 
   const [progress, setProgress] = useState(0);
   const [showToast, setShowToast] = useState(false);
-  const [prediction] = useState<string | null>(null);
+  const [prediction, setPrediction] = useState<string | null>(null);
+
   const [csvPreview, setCsvPreview] = useState("");
 
   const [showModal, setShowModal] = useState(false);
@@ -295,8 +296,6 @@ const App = () => {
     return translated.join(", ");
   }
 
-  
-
   function mapToCsvRow(formData: Record<string, any>): string {
     const row = [
       translate("gender", formData.gender),
@@ -350,6 +349,11 @@ const App = () => {
       });
       const result = await res.json();
       console.log("🎯 Prediction:", result);
+
+      setPrediction(
+        result.brand || result.prediction || "ไม่สามารถคาดการณ์ได้"
+      );
+      setShowModal(true);
     } catch (err) {
       console.error("❌ Upload failed:", err);
     }
@@ -474,11 +478,13 @@ const App = () => {
             <div className="modal-close" onClick={() => setShowModal(false)}>
               ×
             </div>
-            <p className="modal-text">ผลลัพธ์การคาดการณ์: {prediction}</p>
+            <p className="modal-text">
+              📱 รุ่นที่เหมาะกับคุณคือ: <strong>{prediction}</strong>
+            </p>
           </div>
         </div>
       )}
-      {csvPreview && (
+      {!csvPreview && (
         <div className="csv-preview">
           <h3>CSV Preview</h3>
           <pre>{csvPreview}</pre>
