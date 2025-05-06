@@ -1,0 +1,45 @@
+.result-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
+  
+  .brand-logo {
+    width: 100px;
+    height: auto;
+    margin: 1rem 0;
+  }
+  
+  .chart-container {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  
+  .action-button,
+  .submit-button {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  
+  .feedback-section {
+    margin-top: 2rem;
+    text-align: left;
+  }
+  
+  .feedback-section label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+  

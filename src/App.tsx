@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-
+import { useNavigate } from "react-router-dom";
 import PredictionModal from "./components/PredictionModal"; // ดึง component ที่สร้างไว้
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -273,6 +273,7 @@ const App = () => {
       "เจ้าของธุรกิจ/ธุรกิจส่วนตัว": "Business owner",
     },
   };
+  const navigate = useNavigate();
 
   // const csvHeaders = [
   //   'Gender', 'Age_range', 'Status', 'Top3_smartphone_activities',
@@ -356,6 +357,7 @@ const App = () => {
       setPrediction(result.prediction?.label || "ไม่สามารถคาดการณ์ได้");
 
       setShowModal(true);
+      navigate("/result", { state: { prediction: result.prediction.label } });
     } catch (err) {
       console.error("❌ Upload failed:", err);
     }
