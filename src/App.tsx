@@ -350,9 +350,8 @@ const App = () => {
       const result = await res.json();
       console.log("🎯 Prediction:", result);
 
-      setPrediction(
-        result.brand || result.prediction || "ไม่สามารถคาดการณ์ได้"
-      );
+      setPrediction(result.prediction?.label || "ไม่สามารถคาดการณ์ได้");
+
       setShowModal(true);
     } catch (err) {
       console.error("❌ Upload failed:", err);
