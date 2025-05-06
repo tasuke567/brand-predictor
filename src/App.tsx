@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import PredictionResult from "./components/PredictionResult";
 const API_URL = import.meta.env.VITE_API_URL;
 type FormKey = keyof typeof initialState;
 type FormData = typeof initialState;
@@ -477,9 +478,8 @@ const App = () => {
             <div className="modal-close" onClick={() => setShowModal(false)}>
               ×
             </div>
-            <p className="modal-text">
-              📱 รุ่นที่เหมาะกับคุณคือ: <strong>{prediction}</strong>
-            </p>
+            <PredictionResult label={prediction || ""} />
+
           </div>
         </div>
       )}
