@@ -484,12 +484,12 @@ const App = () => {
           </div>
         </div>
       )}
-      {!csvPreview && (
+      {/* {csvPreview && (
         <div className="csv-preview">
           <h3>CSV Preview</h3>
           <pre>{csvPreview}</pre>
         </div>
-      )}
+      )} */}
       <div className="toggle-dark" onClick={() => setDark(!dark)}>
         {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </div>
