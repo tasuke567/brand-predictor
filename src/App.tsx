@@ -143,7 +143,7 @@ const App = () => {
   const [showToast, setShowToast] = useState(false);
   const [prediction, setPrediction] = useState<string | null>(null);
 
-  const [csvPreview, setCsvPreview] = useState("");
+  // const [csvPreview, setCsvPreview] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [dark, setDark] = useState(false);
@@ -337,7 +337,7 @@ const App = () => {
     e.preventDefault();
 
     const csv = formDataToCSV(formData);
-    setCsvPreview(csv); // ตอนนี้แสดง preview แบบเดียวกับที่ส่งไป
+    // setCsvPreview(csv); // ตอนนี้แสดง preview แบบเดียวกับที่ส่งไป
     const blob = new Blob([csv], { type: "text/csv" });
     const formDataUpload = new FormData();
     formDataUpload.append("file", blob, "predict.csv");
