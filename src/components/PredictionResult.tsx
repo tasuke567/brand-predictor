@@ -1,5 +1,14 @@
-
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  LineChart,
+  Line,
+  ResponsiveContainer,
+} from "recharts";
 import "../style/PredictionResult.css"; // Assuming you have a CSS file for styling
 
 const PredictionResult = ({ label }: { label: string }) => {
@@ -22,26 +31,40 @@ const PredictionResult = ({ label }: { label: string }) => {
   return (
     <div className="result-card">
       <h2 className="result-title">ผลการพยากรณ์:</h2>
-      <p>มือถือสมาร์ทโฟนที่เหมาะกับคุณคือ: <strong>{label}</strong></p>
-      <img src={`/logos/${label.toLowerCase()}.png`} alt={`${label} logo`} className="brand-logo" />
+      <p>
+        มือถือสมาร์ทโฟนที่เหมาะกับคุณคือ: <strong>{label}</strong>
+      </p>
+      <img
+        src={`/logos/${label.toLowerCase()}.png`}
+        alt={`${label} logo`}
+        className="brand-logo"
+      />
 
       <h3>Response Time ของผู้ใช้</h3>
-      <BarChart width={400} height={200} data={responseTimeData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="time" fill="#60a5fa" />
-      </BarChart>
+      <div className="chart-wrapper">
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart data={responseTimeData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="time" fill="#60a5fa" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       <h3>เวลาการประมวลผลของโมเดล ML</h3>
-      <LineChart width={400} height={200} data={mlProcessingData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="run" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="ms" stroke="#f472b6" />
-      </LineChart>
+      <div className="chart-wrapper">
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={mlProcessingData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="run" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="ms" stroke="#f472b6" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
 
       <button className="retry-button">พยากรณ์ใหม่</button>
 

@@ -1,8 +1,8 @@
 .result-card {
-    max-width: 600px;
+    max-width: 90%;
     margin: 2rem auto;
     background: white;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 16px;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -13,8 +13,14 @@
   }
   
   .brand-logo {
-    max-width: 120px;
+    max-width: 100px;
+    height: auto;
     margin: 1rem auto;
+  }
+  .chart-wrapper {
+    width: 100%;
+    height: auto;
+    margin: 1rem 0;
   }
   
   .retry-button,
@@ -47,5 +53,21 @@
   
   .feedback-section input[type="range"] {
     width: 100%;
+  }
+
+  @media (max-width: 640px) {
+    .result-card {
+      padding: 1rem;
+    }
+  
+    .brand-logo {
+      max-width: 80px;
+    }
+  
+    .retry-button,
+    .submit-feedback-button {
+      width: 100%;
+      font-size: 0.95rem;
+    }
   }
   
