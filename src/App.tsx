@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import PredictionResult from "./components/PredictionResult";
+
+import PredictionModal from "./components/PredictionModal"; // ดึง component ที่สร้างไว้
+
 const API_URL = import.meta.env.VITE_API_URL;
 type FormKey = keyof typeof initialState;
 type FormData = typeof initialState;
@@ -473,15 +475,11 @@ const App = () => {
       </form>
       {showToast && <div className="toast">กรุณากรอกข้อมูลให้ครบถ้วน</div>}
       {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <div className="modal-close" onClick={() => setShowModal(false)}>
-              ×
-            </div>
-            <PredictionResult label={prediction || ""} />
-
-          </div>
-        </div>
+        <PredictionModal
+          show={showModal}
+          prediction={prediction}
+          onClose={() => setShowModal(false)}
+        />
       )}
       {/* {csvPreview && (
         <div className="csv-preview">

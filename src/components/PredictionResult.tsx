@@ -9,7 +9,7 @@ import {
   Line,
   ResponsiveContainer,
 } from "recharts";
-import "../style/PredictionResult.css"; // Assuming you have a CSS file for styling
+import "../styles/PredictionResult.css"; // Assuming you have a CSS file for styling
 
 const PredictionResult = ({ label }: { label: string }) => {
   const responseTimeData = [
