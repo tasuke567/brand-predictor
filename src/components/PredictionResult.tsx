@@ -100,12 +100,12 @@ const PredictionResult = () => {
       <div className="feedback-section">
         <FeedbackForm prediction={prediction} />
       </div>
-      <p className="theme-label">
+      {/* <p className="theme-label">
           🎨 ธีมของคุณ:{" "}
           <strong style={{ color: "var(--color-primary)" }}>
             {prediction}
           </strong>
-        </p>
+        </p> */}
     </div>
   );
 };
