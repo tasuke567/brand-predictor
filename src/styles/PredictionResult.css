@@ -1,133 +1,44 @@
 .result-card {
-    max-width: 90%;
-    margin: auto;
-    background: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  .result-title {
-    color: #1f2937;
-  }
-  
-  .brand-logo {
-    max-width: 100px;
-    height: auto;
-    margin: 1rem auto;
-  }
-  .chart-wrapper {
-    width: 100%;
-    height: auto;
-    margin: 1rem 0;
-  }
-  
-  .retry-button,
-  .submit-feedback-button {
-    background-color: #3b82f6;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 1rem;
-  }
-  
-  .retry-button:hover,
-  .submit-feedback-button:hover {
-    background-color: #2563eb;
-  }
-  
-  .feedback-section {
-    margin-top: 2rem;
-    text-align: left;
-  }
-  
-  .feedback-section label {
-    display: block;
-    margin-top: 1rem;
-    font-weight: 500;
-  }
-  
-  .feedback-section input[type="range"] {
-    width: 100%;
-  }
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
 
-  @media (max-width: 640px) {
-    .result-card {
-      padding: 1rem;
-    }
-  
-    .brand-logo {
-      max-width: 80px;
-    }
-  
-    .retry-button,
-    .submit-feedback-button {
-      width: 100%;
-      font-size: 0.95rem;
-    }
-  }
-  .result-card {
-    max-width: 900px;
-    margin: 3rem auto;
-    padding: 2rem;
-    background-color: #ffffff;
-    border-radius: 1.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  }
-  
-  .result-title {
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 1rem;
-    color: #1f2937;
-  }
-  
-  .result-label {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #2563eb;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .brand-logo {
-    display: block;
-    margin: 0 auto 2rem;
-    max-height: 80px;
-  }
-  
-  .chart-wrapper {
-    margin: 2rem 0;
-    background: #f9fafb;
-    padding: 1rem;
-    border-radius: 1rem;
-  }
-  
-  .feedback-section {
-    margin-top: 3rem;
-    background-color: #fef3c7;
-    border-radius: 1rem;
-    padding: 2rem;
-  }
-  
-  .retry-button {
-    margin: 2rem auto 1rem;
-    display: block;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border: none;
-    border-radius: 9999px;
-    background-color: #3b82f6;
-    color: white;
-    transition: 0.2s;
-    cursor: pointer;
-  }
-  
-  .retry-button:hover {
-    background-color: #2563eb;
-  }
-  
+.result-title {
+  font-size: 2rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.result-label {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2563eb;
+  margin-bottom: 1rem;
+}
+
+.chart-wrapper {
+  margin: 2rem 0;
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.feedback-section {
+  margin-top: 3rem;
+  background-color: #fef3c7;
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.retry-button {
+  background-color: #3b82f6;
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  margin: 2rem auto 1rem;
+  display: block;
+  font-size: 1rem;
+}
