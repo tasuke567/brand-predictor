@@ -1,0 +1,15 @@
+/* FeedbackForm.css */
+.feedback-form label {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  
+  .feedback-form input[type="range"] {
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+  
+  .submit-feedback-button {
+    margin-top: 1rem;
+  }
+  

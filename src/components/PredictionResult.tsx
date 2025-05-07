@@ -11,8 +11,7 @@ import {
 } from "recharts";
 import "../styles/PredictionResult.css"; // Assuming you have a CSS file for styling
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useState } from "react";
+import FeedbackForm from "../components/FeedbackForm";
 
 const PredictionResult = () => {
   const responseTimeData = [
@@ -33,31 +32,7 @@ const PredictionResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const prediction = location.state?.prediction || "ไม่สามารถคาดการณ์ได้";
-  const [submitting, setSubmitting] = useState(false);
-  const [done, setDone] = useState(false);
-
-  const handleSurveySubmit = async () => {
-    setSubmitting(true);
-    try {
-      await axios.post(
-        import.meta.env.VITE_API_URL + "/feedback",
-        {
-          prediction,
-          uiEase: 4.5,
-          satisfaction: 4.2,
-          clarity: 4,
-        },
-        {
-          headers: { "Content-Type": "application/json" }, // ← ย้ำให้แน่
-        }
-      );
-      setDone(true); // โชว์ข้อความ “ขอบคุณ”
-    } catch (e) {
-      alert("ส่งแบบสอบถามไม่สำเร็จ ลองใหม่");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  
   return (
     <div className="result-card">
       <h2 className="result-title">ผลการพยากรณ์:</h2>
@@ -99,21 +74,8 @@ const PredictionResult = () => {
       </button>
 
       <div className="feedback-section">
-        <h3>แบบสอบถาม UI/UX</h3>
-        {/* range inputs (อาจเปลี่ยนเป็น state จริงภายหลัง) */}
-        {/* … */}
-        {done ? (
-          <p className="thanks-text">🙏 ขอบคุณสำหรับความคิดเห็น!</p>
-        ) : (
-          <button
-            className="submit-feedback-button"
-            onClick={handleSurveySubmit}
-            disabled={submitting}
-          >
-            {submitting ? "กำลังส่ง..." : "ส่งแบบสอบถาม"}
-          </button>
-        )}
-      </div>
+  <FeedbackForm prediction={prediction} />
+</div>
     </div>
   );
 };
