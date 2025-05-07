@@ -1,5 +1,3 @@
-
-
 button {
   background-color: var(--color-primary);
   color: white;
@@ -32,6 +30,15 @@ button {
 .summary-section {
   padding: 1rem 1.25rem;
 }
+.summary-section p {
+  line-height: 1.6;
+}
+@media (max-width: 480px) {
+  .summary-section {
+    font-size: 0.95rem;
+  }
+}
+
 @media (min-width: 768px) {
   .summary-section {
     padding: 2rem 3rem;
