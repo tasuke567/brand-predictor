@@ -1,7 +1,6 @@
 // src/context/ThemeContext.tsx
 import { createContext, useContext, useEffect, useState } from "react";
-import { brandThemes } from "../utils/brandThemes";
-import { darkBrandThemes } from "../utils/darkBrandThemes";
+
 
 export type ThemeMode = "light" | "dark";
 
@@ -19,13 +18,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [prediction, setPrediction] = useState<string>("default");
 
   useEffect(() => {
-    const themeMap = mode === "dark" ? darkBrandThemes : brandThemes;
-    const theme = themeMap[prediction.toLowerCase()] || themeMap.default;
-
-    const root = document.documentElement;
-    root.style.setProperty("--color-primary", theme.primary);
-    root.style.setProperty("--color-bg", theme.background);
-    root.style.setProperty("--color-text", theme.text);
+    // Set body class like: "light apple" or "dark samsung"
+    const brandClass = prediction.toLowerCase();
+    document.body.className = `${mode} ${brandClass}`;
   }, [mode, prediction]);
 
   return (
