@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles/App.css";
 import { useNavigate } from "react-router-dom";
-import PredictionModal from "./components/PredictionModal";
+
 import { labels, options, initialState, sections } from "./utils/formConfig";
 import { formDataToCSV } from "./utils/formUtils";
 import FieldGroup from "./components/FieldGroup";
@@ -18,8 +18,6 @@ const App = () => {
   const [errors, setErrors] = useState<Partial<Record<FormKey, boolean>>>({});
   const [progress, setProgress] = useState(0);
   const [showToast, setShowToast] = useState(false);
-  const [prediction, setPrediction] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState(false);
   const [dark, setDark] = useState(false);
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
@@ -80,8 +78,6 @@ const App = () => {
         body: formDataUpload,
       });
       const result = await res.json();
-      setPrediction(result?.prediction?.label || "ไม่สามารถคาดการณ์ได้");
-      setShowModal(true);
       navigate("/result", { state: { prediction: result.prediction.label } });
     } catch (err) {
       console.error("❌ Upload failed:", err);
@@ -170,13 +166,6 @@ const App = () => {
 
       {showToast && <div className="toast">กรุณากรอกข้อมูลให้ครบถ้วน</div>}
 
-      {showModal && (
-        <PredictionModal
-          show={showModal}
-          prediction={prediction}
-          onClose={() => setShowModal(false)}
-        />
-      )}
 
       <div className="toggle-dark" onClick={() => setDark(!dark)}>
         {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
