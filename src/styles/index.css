@@ -2,6 +2,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
 
 :root {
+  --color-bg: #f9fafb;
+  --color-text: #111827;
+  --color-primary: #3b82f6;
   --color-card: #ffffff;
   --color-primary-hover: #2563eb;
   --color-border: #d1d5db;
