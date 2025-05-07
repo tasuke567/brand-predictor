@@ -1,14 +1,14 @@
-// src/components/PredictionModal.tsx
+// PredictionModal.tsx
 import React from "react";
-import "../styles/PredictionModal.css"; // CSS styles for the modal
+import "../styles/PredictionModal.css"; // Import your CSS styles here
 
-type Props = {
+type PredictionModalProps = {
   show: boolean;
   prediction: string | null;
   onClose: () => void;
 };
 
-const PredictionModal: React.FC<Props> = ({ show, prediction, onClose }) => {
+const PredictionModal: React.FC<PredictionModalProps> = ({ show, prediction, onClose }) => {
   if (!show) return null;
 
   return (
@@ -20,7 +20,6 @@ const PredictionModal: React.FC<Props> = ({ show, prediction, onClose }) => {
         <p className="modal-text">
           📱 รุ่นที่เหมาะกับคุณคือ: <strong>{prediction}</strong>
         </p>
-        {/* เพิ่ม content หรือกราฟต่าง ๆ ได้ที่นี่ */}
       </div>
     </div>
   );

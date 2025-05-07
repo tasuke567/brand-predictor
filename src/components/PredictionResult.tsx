@@ -10,8 +10,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import "../styles/PredictionResult.css"; // Assuming you have a CSS file for styling
-
-const PredictionResult = ({ label }: { label: string }) => {
+import { useLocation, useNavigate } from "react-router-dom";
+const PredictionResult = () => {
   const responseTimeData = [
     { name: "User A", time: 380 },
     { name: "User B", time: 320 },
@@ -27,16 +27,16 @@ const PredictionResult = ({ label }: { label: string }) => {
     { run: "Run 4", ms: 400 },
     { run: "Run 5", ms: 392 },
   ];
-
+  const location = useLocation();
+  const navigate = useNavigate();
+  const prediction = location.state?.prediction || "ไม่สามารถคาดการณ์ได้";
   return (
     <div className="result-card">
       <h2 className="result-title">ผลการพยากรณ์:</h2>
-      <p>
-        มือถือสมาร์ทโฟนที่เหมาะกับคุณคือ: <strong>{label}</strong>
-      </p>
+      <div className="result-label">{prediction}</div>
       <img
-        src={`/logos/${label.toLowerCase()}.png`}
-        alt={`${label} logo`}
+        src={`/logos/${prediction.toLowerCase()}.png`}
+        alt={`${prediction} logo`}
         className="brand-logo"
       />
 
@@ -66,16 +66,18 @@ const PredictionResult = ({ label }: { label: string }) => {
         </ResponsiveContainer>
       </div>
 
-      <button className="retry-button">พยากรณ์ใหม่</button>
+      <button className="retry-button" onClick={() => navigate("/")}>
+        🔁 พยากรณ์ใหม่
+      </button>
 
       <div className="feedback-section">
         <h3>แบบสอบถาม UI/UX</h3>
         <label>ความง่ายในการใช้งาน (4.5)</label>
-        <input type="range" min="1" max="5" value="4.5" readOnly />
+        <input type="range" min="1" max="5" defaultValue="4.5" readOnly />
         <label>ความพึงพอใจต่อผลการพยากรณ์ (4.2)</label>
-        <input type="range" min="1" max="5" value="4.2" readOnly />
+        <input type="range" min="1" max="5" defaultValue="4.2" readOnly />
         <label>การให้ผลลัพธ์ที่ชัดเจนพอใช้งานได้ (4)</label>
-        <input type="range" min="1" max="5" value="4" readOnly />
+        <input type="range" min="1" max="5" defaultValue="4" readOnly />
         <button className="submit-feedback-button">ส่งแบบสอบถาม</button>
       </div>
     </div>
