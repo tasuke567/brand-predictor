@@ -19,6 +19,7 @@ import { applyBrandTheme } from "../utils/themeUtils";
 const PredictionResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const prediction = location.state?.prediction || "ไม่สามารถคาดการณ์ได้";
   const theme = brandThemes[prediction] || brandThemes.default;
   const responseTimeData = [
@@ -52,6 +53,8 @@ const PredictionResult = () => {
     });
     applyBrandTheme(theme);
   }, [prediction]);
+
+
 
   return (
     <div
