@@ -29,7 +29,7 @@ const PredictionPage: React.FC<Props> = () => {
       <h2>ผลการพยากรณ์:</h2>
       <p>มือถือที่เหมาะกับคุณคือ: <strong>{prediction}</strong></p>
       <p>ผู้นำเทคโนโลยีและดีไซน์ล้ำสมัย</p>
-      <img src={`/logos/${prediction.toLowerCase()}.png`} alt={prediction} className="brand-logo" />
+      <img src={`/images/${prediction.toLowerCase()}.png`} alt={prediction} className="brand-logo" />
 
       <h3>Response Time ของผู้ใช้</h3>
       <div className="chart-container">
