@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { labels, options, initialState, sections } from "./utils/formConfig";
 import { formDataToCSV } from "./utils/formUtils";
 import FieldGroup from "./components/FieldGroup";
-import BrandColorPreview from "./components/BrandColorPreview";
+
 
 /**
  * Type helpers
@@ -225,10 +225,7 @@ const App = () => {
       <div className="toggle-dark" onClick={() => setDark(!dark)}>
         {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </div>
-      <section>
-        <h3 style={{ textAlign: "center" }}>ธีมของแต่ละแบรนด์</h3>
-        <BrandColorPreview />
-      </section>
+      
     </div>
   );
 };
