@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import "../styles/PredictionResult.css"; // Assuming you have a CSS file for styling
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";     
+import axios from "axios";
 import { useState } from "react";
 
 const PredictionResult = () => {
@@ -39,13 +39,19 @@ const PredictionResult = () => {
   const handleSurveySubmit = async () => {
     setSubmitting(true);
     try {
-      await axios.post(import.meta.env.VITE_API_URL + "/feedback", {
-        prediction,
-        uiEase: 4.5,
-        satisfaction: 4.2,
-        clarity: 4
-      });
-      setDone(true);                 // โชว์ข้อความ “ขอบคุณ”
+      await axios.post(
+        import.meta.env.VITE_API_URL + "/feedback",
+        {
+          prediction,
+          uiEase: 4.5,
+          satisfaction: 4.2,
+          clarity: 4,
+        },
+        {
+          headers: { "Content-Type": "application/json" }, // ← ย้ำให้แน่
+        }
+      );
+      setDone(true); // โชว์ข้อความ “ขอบคุณ”
     } catch (e) {
       alert("ส่งแบบสอบถามไม่สำเร็จ ลองใหม่");
     } finally {
