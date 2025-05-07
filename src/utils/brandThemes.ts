@@ -35,4 +35,3 @@ export const brandThemes: Record<string, {
       text: "#1f2937",
     },
   };
-  
