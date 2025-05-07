@@ -2,8 +2,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
 
 :root {
-  --color-bg: #f3f4f6;
-  --color-text: #111827;
+  --color-bg: #f9fafb;
+  --color-text: #1f2937;
   --color-card: #ffffff;
   --color-primary: #3b82f6;
   --color-primary-hover: #2563eb;
@@ -12,9 +12,6 @@
   --color-modal-bg: rgba(0, 0, 0, 0.4);
   --color-toast-bg: #ffffff;
   --color-toast-shadow: rgba(0, 0, 0, 0.1);
-  --primary-color: #3b82f6;
-  --bg-color: #f9fafb;
-  --text-color: #1f2937;
   transition: all 0.3s ease-in-out;
 }
 
