@@ -1,11 +1,16 @@
+import { Helmet } from "react-helmet-async";
 import PredictionResult from "../components/PredictionResult";
+import Layout from "../components/Layout";
 
-// หน้านี้ใช้สำหรับ routing ผ่าน <Route path="/result" element={<... />} />
 const PredictionResultPage = () => {
   return (
-    <main className="page">
+    <Layout>
+      <Helmet>
+        <title>ผลการพยากรณ์ | Brand Predictor</title>
+        <meta name="description" content="แสดงผลแบรนด์มือถือที่เหมาะกับคุณ พร้อมกราฟสถิติและแบบสอบถาม" />
+      </Helmet>
       <PredictionResult />
-    </main>
+    </Layout>
   );
 };
 
