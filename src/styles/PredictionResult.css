@@ -70,4 +70,64 @@
       font-size: 0.95rem;
     }
   }
+  .result-card {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .result-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #1f2937;
+  }
+  
+  .result-label {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2563eb;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .brand-logo {
+    display: block;
+    margin: 0 auto 2rem;
+    max-height: 80px;
+  }
+  
+  .chart-wrapper {
+    margin: 2rem 0;
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+  
+  .feedback-section {
+    margin-top: 3rem;
+    background-color: #fef3c7;
+    border-radius: 1rem;
+    padding: 2rem;
+  }
+  
+  .retry-button {
+    margin: 2rem auto 1rem;
+    display: block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 9999px;
+    background-color: #3b82f6;
+    color: white;
+    transition: 0.2s;
+    cursor: pointer;
+  }
+  
+  .retry-button:hover {
+    background-color: #2563eb;
+  }
   

@@ -9,11 +9,15 @@ import {
   Line,
   ResponsiveContainer,
 } from "recharts";
-import "../styles/PredictionResult.css"; // Assuming you have a CSS file for styling
+import "../styles/PredictionResult.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import FeedbackForm from "../components/FeedbackForm";
 
 const PredictionResult = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const prediction = location.state?.prediction || "ไม่สามารถคาดการณ์ได้";
+
   const responseTimeData = [
     { name: "User A", time: 380 },
     { name: "User B", time: 320 },
@@ -29,10 +33,7 @@ const PredictionResult = () => {
     { run: "Run 4", ms: 400 },
     { run: "Run 5", ms: 392 },
   ];
-  const location = useLocation();
-  const navigate = useNavigate();
-  const prediction = location.state?.prediction || "ไม่สามารถคาดการณ์ได้";
-  
+
   return (
     <div className="result-card">
       <h2 className="result-title">ผลการพยากรณ์:</h2>
@@ -43,8 +44,8 @@ const PredictionResult = () => {
         className="brand-logo"
       />
 
-      <h3>Response Time ของผู้ใช้</h3>
-      <div className="chart-wrapper">
+      <section className="chart-wrapper">
+        <h3>📊 Response Time ของผู้ใช้</h3>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={responseTimeData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -54,10 +55,10 @@ const PredictionResult = () => {
             <Bar dataKey="time" fill="#60a5fa" />
           </BarChart>
         </ResponsiveContainer>
-      </div>
+      </section>
 
-      <h3>เวลาการประมวลผลของโมเดล ML</h3>
-      <div className="chart-wrapper">
+      <section className="chart-wrapper">
+        <h3>⏱️ เวลาการประมวลผลของโมเดล ML</h3>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={mlProcessingData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -67,15 +68,15 @@ const PredictionResult = () => {
             <Line type="monotone" dataKey="ms" stroke="#f472b6" />
           </LineChart>
         </ResponsiveContainer>
-      </div>
+      </section>
 
       <button className="retry-button" onClick={() => navigate("/")}>
         🔁 พยากรณ์ใหม่
       </button>
 
       <div className="feedback-section">
-  <FeedbackForm prediction={prediction} />
-</div>
+        <FeedbackForm prediction={prediction} />
+      </div>
     </div>
   );
 };
