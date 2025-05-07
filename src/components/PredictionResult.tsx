@@ -14,12 +14,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import FeedbackForm from "../components/FeedbackForm";
 import { brandThemes } from "../utils/brandThemes";
 import { useEffect } from "react";
-import { applyBrandTheme } from "../utils/themeUtils";
-
+import { useTheme } from "../context/ThemeContext";
 const PredictionResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const { setPrediction } = useTheme();
   const prediction = location.state?.prediction || "ไม่สามารถคาดการณ์ได้";
   const theme = brandThemes[prediction] || brandThemes.default;
   const responseTimeData = [
@@ -39,28 +38,11 @@ const PredictionResult = () => {
   ];
 
   useEffect(() => {
-    const theme = brandThemes[prediction] || brandThemes.default;
-
-    const root = document.documentElement;
-    root.style.setProperty("--primary-color", theme.primary);
-    root.style.setProperty("--bg-color", theme.background);
-    root.style.setProperty("--text-color", theme.text);
-
-    // Optional: add fade effect
-    root.animate([{ opacity: 0 }, { opacity: 1 }], {
-      duration: 400,
-      fill: "forwards",
-    });
-    applyBrandTheme(theme);
-  }, [prediction]);
-
-
+    setPrediction(prediction);
+  }, [prediction, setPrediction]);
 
   return (
-    <div
-      className="result-card"
-      style={{ backgroundColor: theme.background, color: theme.text }}
-    >
+    <div className="result-card">
       <h2 className="result-title">ผลการพยากรณ์:</h2>
       <div className="result-label" style={{ color: theme.primary }}>
         {prediction}
