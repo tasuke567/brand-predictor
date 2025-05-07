@@ -12,12 +12,13 @@ import {
 import "../styles/PredictionResult.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import FeedbackForm from "../components/FeedbackForm";
+import { brandThemes } from "../utils/brandThemes";
 
 const PredictionResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const prediction = location.state?.prediction || "ไม่สามารถคาดการณ์ได้";
-
+  const theme = brandThemes[prediction] || brandThemes.default;
   const responseTimeData = [
     { name: "User A", time: 380 },
     { name: "User B", time: 320 },
@@ -35,9 +36,14 @@ const PredictionResult = () => {
   ];
 
   return (
-    <div className="result-card">
+    <div
+      className="result-card"
+      style={{ backgroundColor: theme.background, color: theme.text }}
+    >
       <h2 className="result-title">ผลการพยากรณ์:</h2>
-      <div className="result-label">{prediction}</div>
+      <div className="result-label" style={{ color: theme.primary }}>
+        {prediction}
+      </div>
       <img
         src={`/images/${prediction.toLowerCase()}.png`}
         alt={`${prediction} logo`}
@@ -70,7 +76,14 @@ const PredictionResult = () => {
         </ResponsiveContainer>
       </section>
 
-      <button className="retry-button" onClick={() => navigate("/")}>
+      <button
+        className="retry-button"
+        style={{
+          backgroundColor: theme.primary,
+          color: "white",
+        }}
+        onClick={() => navigate("/")}
+      >
         🔁 พยากรณ์ใหม่
       </button>
 

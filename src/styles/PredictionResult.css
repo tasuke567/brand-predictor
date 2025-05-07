@@ -42,3 +42,8 @@
   display: block;
   font-size: 1rem;
 }
+.brand-logo {
+  width: 100px;
+  height: auto;
+  margin: 1rem auto;
+}
