@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import './index.css'; // ← ✅ สำคัญมาก
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PredictionResult from './components/PredictionResult.tsx'; // ← ✅ สำคัญมาก
+import PredictionResult from './pages/PredictionResultPage.tsx'; // ✅ import หน้าใหม่ที่เราสร้างขึ้นมา
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter> {/* ✅ ห่อไว้ตรงนี้ */}
