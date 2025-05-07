@@ -12,6 +12,10 @@
   --color-modal-bg: rgba(0, 0, 0, 0.4);
   --color-toast-bg: #ffffff;
   --color-toast-shadow: rgba(0, 0, 0, 0.1);
+  --primary-color: #3b82f6;
+  --bg-color: #f9fafb;
+  --text-color: #1f2937;
+  transition: all 0.3s ease-in-out;
 }
 
 body {
@@ -203,7 +207,7 @@ body.dark {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  overflow-y: auto; 
+  overflow-y: auto;
   padding: 1rem;
 }
 

@@ -1,9 +1,4 @@
-:root {
-  --primary-color: #3b82f6;
-  --bg-color: #f9fafb;
-  --text-color: #1f2937;
-  transition: all 0.3s ease-in-out;
-}
+
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
