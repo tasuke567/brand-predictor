@@ -17,6 +17,26 @@ button {
   font-weight: 500;
   text-decoration: none;
 }
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+@media (min-width: 768px) {
+  .button-group {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.summary-section {
+  padding: 1rem 1.25rem;
+}
+@media (min-width: 768px) {
+  .summary-section {
+    padding: 2rem 3rem;
+  }
+}
 
 .retry-button:hover,
 .submit-button:hover,
