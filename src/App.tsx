@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { labels, options, initialState, sections } from "./utils/formConfig";
 import { formDataToCSV } from "./utils/formUtils";
 import FieldGroup from "./components/FieldGroup";
+import BrandColorPreview from "./components/BrandColorPreview";
 
 /**
  * Type helpers
@@ -36,7 +37,9 @@ const App = () => {
     setFormData((prev) => {
       if (type === "checkbox" && Array.isArray(prev[key])) {
         const list = prev[key] as string[];
-        const updated = checked ? [...list, value] : list.filter((v) => v !== value);
+        const updated = checked
+          ? [...list, value]
+          : list.filter((v) => v !== value);
         return { ...prev, [key]: updated } as FormData;
       }
       return { ...prev, [key]: value } as FormData;
@@ -94,7 +97,9 @@ const App = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const res = JSON.parse(xhr.responseText);
-            navigate("/result", { state: { prediction: res.prediction.label } });
+            navigate("/result", {
+              state: { prediction: res.prediction.label },
+            });
           } catch (_) {
             alert("แปลงผลลัพธ์ไม่สำเร็จ");
           }
@@ -121,7 +126,10 @@ const App = () => {
     setProgress((filled / (Object.keys(formData) as FormKey[]).length) * 100);
   }, [formData]);
 
-  useEffect(() => localStorage.setItem("smartphone-form", JSON.stringify(formData)), [formData]);
+  useEffect(
+    () => localStorage.setItem("smartphone-form", JSON.stringify(formData)),
+    [formData]
+  );
 
   useEffect(() => {
     if (showToast) {
@@ -143,7 +151,10 @@ const App = () => {
       {isUploading && (
         <div className="loading-overlay">
           <div className="loader-bar">
-            <div className="loader-fill" style={{ width: `${uploadPercent}%` }} />
+            <div
+              className="loader-fill"
+              style={{ width: `${uploadPercent}%` }}
+            />
           </div>
           <p className="loading-text">อัปโหลด {uploadPercent}%</p>
         </div>
@@ -175,7 +186,10 @@ const App = () => {
             <h2 className="form-section-title">{currentSection.title}</h2>
             {(Object.keys(labels) as FormKey[]).map((k) => (
               <div key={k} className="summary-item">
-                <strong>{labels[k]}</strong>: {Array.isArray(formData[k]) ? (formData[k] as string[]).join(", ") : formData[k] || "-"}
+                <strong>{labels[k]}</strong>:{" "}
+                {Array.isArray(formData[k])
+                  ? (formData[k] as string[]).join(", ")
+                  : formData[k] || "-"}
               </div>
             ))}
           </div>
@@ -193,8 +207,14 @@ const App = () => {
             </button>
           )}
           {step === sections.length - 1 && (
-            <button type="submit" className="submit-button" disabled={isUploading}>
-              {isUploading ? "กำลังอัปโหลด..." : "พยากรณ์สมาร์ทโฟนที่เหมาะกับคุณ"}
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={isUploading}
+            >
+              {isUploading
+                ? "กำลังอัปโหลด..."
+                : "พยากรณ์สมาร์ทโฟนที่เหมาะกับคุณ"}
             </button>
           )}
         </div>
@@ -205,6 +225,10 @@ const App = () => {
       <div className="toggle-dark" onClick={() => setDark(!dark)}>
         {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </div>
+      <section>
+        <h3 style={{ textAlign: "center" }}>ธีมของแต่ละแบรนด์</h3>
+        <BrandColorPreview />
+      </section>
     </div>
   );
 };
