@@ -9,6 +9,13 @@
   }
   
   .submit-feedback-button {
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
     margin-top: 1rem;
   }
   
