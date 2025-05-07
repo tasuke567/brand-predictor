@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./styles/App.css";
 import { useNavigate } from "react-router-dom";
-
 import { labels, options, initialState, sections } from "./utils/formConfig";
 import { formDataToCSV } from "./utils/formUtils";
 import FieldGroup from "./components/FieldGroup";
@@ -21,7 +20,8 @@ const App = () => {
   const [errors, setErrors] = useState<Partial<Record<FormKey, boolean>>>({});
   const [progress, setProgress] = useState(0);
   const [showToast, setShowToast] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // <— NEW
+  const [uploadPercent, setUploadPercent] = useState(0); // 0-100
+  const [isUploading, setIsUploading] = useState(false);
   const [dark, setDark] = useState(false);
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
@@ -30,32 +30,27 @@ const App = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const target = e.target;
-    const { name, value } = target;
+    const { name, value, type, checked } = e.target as HTMLInputElement;
     const key = name as FormKey;
-    const isCheckbox = (target as HTMLInputElement).type === "checkbox";
 
     setFormData((prev) => {
-      if (isCheckbox && Array.isArray(prev[key])) {
-        const checked = (target as HTMLInputElement).checked;
+      if (type === "checkbox" && Array.isArray(prev[key])) {
         const list = prev[key] as string[];
-        const updatedList = checked
-          ? [...list, value]
-          : list.filter((v) => v !== value);
-        return { ...prev, [key]: updatedList } as FormData;
+        const updated = checked ? [...list, value] : list.filter((v) => v !== value);
+        return { ...prev, [key]: updated } as FormData;
       }
       return { ...prev, [key]: value } as FormData;
     });
   };
 
   const validate = (fields: FormKey[]) => {
-    const newErrors: Partial<Record<FormKey, boolean>> = {};
+    const errs: Partial<Record<FormKey, boolean>> = {};
     fields.forEach((k) => {
       const v = formData[k];
-      if (!v || (Array.isArray(v) && !v.length)) newErrors[k] = true;
+      if (!v || (Array.isArray(v) && !v.length)) errs[k] = true;
     });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleNext = () => {
@@ -69,27 +64,52 @@ const App = () => {
 
   const handleBack = () => setStep((p) => p - 1);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // show loader
+    setIsUploading(true);
+    setUploadPercent(0);
+
+    // build csv & form-data
     const csv = formDataToCSV(formData);
     const blob = new Blob([csv], { type: "text/csv" });
-    const formDataUpload = new FormData();
-    formDataUpload.append("file", blob, "predict.csv");
+    const fd = new FormData();
+    fd.append("file", blob, "predict.csv");
 
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
-        method: "POST",
-        body: formDataUpload,
-      });
-      const result = await res.json();
-      navigate("/result", { state: { prediction: result.prediction.label } });
-    } catch (err) {
-      console.error("❌ Upload failed:", err);
-      alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
-    } finally {
-      setIsLoading(false); // hide loader no matter what
-    }
+    /**
+     * Use XMLHttpRequest so we can tap into `upload.onprogress`
+     */
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", import.meta.env.VITE_API_URL + "/predict", true);
+
+    xhr.upload.onprogress = (evt) => {
+      if (evt.lengthComputable) {
+        const pct = Math.round((evt.loaded / evt.total) * 100);
+        setUploadPercent(pct);
+      }
+    };
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        setIsUploading(false);
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const res = JSON.parse(xhr.responseText);
+            navigate("/result", { state: { prediction: res.prediction.label } });
+          } catch (_) {
+            alert("แปลงผลลัพธ์ไม่สำเร็จ");
+          }
+        } else {
+          alert("อัปโหลดไม่สำเร็จ ลองใหม่อีกครั้ง");
+        }
+      }
+    };
+
+    xhr.onerror = () => {
+      setIsUploading(false);
+      alert("เครือข่ายมีปัญหา ลองใหม่");
+    };
+
+    xhr.send(fd);
   };
 
   /** -------------------- effects -------------------- */
@@ -101,9 +121,7 @@ const App = () => {
     setProgress((filled / (Object.keys(formData) as FormKey[]).length) * 100);
   }, [formData]);
 
-  useEffect(() => {
-    localStorage.setItem("smartphone-form", JSON.stringify(formData));
-  }, [formData]);
+  useEffect(() => localStorage.setItem("smartphone-form", JSON.stringify(formData)), [formData]);
 
   useEffect(() => {
     if (showToast) {
@@ -121,11 +139,13 @@ const App = () => {
 
   return (
     <div className="container">
-      {/* Loading overlay */}
-      {isLoading && (
+      {/* Loading overlay with real % */}
+      {isUploading && (
         <div className="loading-overlay">
-          <div className="spinner"></div>
-          <p className="loading-text">กำลังประมวลผล...</p>
+          <div className="loader-bar">
+            <div className="loader-fill" style={{ width: `${uploadPercent}%` }} />
+          </div>
+          <p className="loading-text">อัปโหลด {uploadPercent}%</p>
         </div>
       )}
 
@@ -173,8 +193,8 @@ const App = () => {
             </button>
           )}
           {step === sections.length - 1 && (
-            <button type="submit" className="submit-button" disabled={isLoading}>
-              {isLoading ? "กำลังส่ง..." : "พยากรณ์สมาร์ทโฟนที่เหมาะกับคุณ"}
+            <button type="submit" className="submit-button" disabled={isUploading}>
+              {isUploading ? "กำลังอัปโหลด..." : "พยากรณ์สมาร์ทโฟนที่เหมาะกับคุณ"}
             </button>
           )}
         </div>
