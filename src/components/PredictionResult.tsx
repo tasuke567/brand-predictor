@@ -14,6 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import FeedbackForm from "../components/FeedbackForm";
 import { brandThemes } from "../utils/brandThemes";
 import { useEffect } from "react";
+import { applyBrandTheme } from "../utils/themeUtils";
 
 const PredictionResult = () => {
   const location = useLocation();
@@ -38,17 +39,18 @@ const PredictionResult = () => {
 
   useEffect(() => {
     const theme = brandThemes[prediction] || brandThemes.default;
-  
+
     const root = document.documentElement;
     root.style.setProperty("--primary-color", theme.primary);
     root.style.setProperty("--bg-color", theme.background);
     root.style.setProperty("--text-color", theme.text);
-  
+
     // Optional: add fade effect
     root.animate([{ opacity: 0 }, { opacity: 1 }], {
       duration: 400,
       fill: "forwards",
     });
+    applyBrandTheme(theme);
   }, [prediction]);
 
   return (
@@ -62,6 +64,7 @@ const PredictionResult = () => {
       </div>
       <img
         src={`/images/${prediction.toLowerCase()}.png`}
+        onError={(e) => (e.currentTarget.src = "/images/default.png")}
         alt={`${prediction} logo`}
         className="brand-logo"
       />
@@ -94,6 +97,7 @@ const PredictionResult = () => {
 
       <button
         className="retry-button"
+        aria-label="พยากรณ์ใหม่"
         style={{
           backgroundColor: theme.primary,
           color: "white",
