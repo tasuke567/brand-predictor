@@ -35,7 +35,7 @@ const PredictionResult = () => {
       <h2 className="result-title">ผลการพยากรณ์:</h2>
       <div className="result-label">{prediction}</div>
       <img
-        src={`/logos/${prediction.toLowerCase()}.png`}
+        src={`/images/${prediction.toLowerCase()}.png`}
         alt={`${prediction} logo`}
         className="brand-logo"
       />

@@ -40,3 +40,32 @@
 .read-the-docs {
   color: #888;
 }
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+}
+.spinner {
+  width: 56px;
+  height: 56px;
+  border: 6px solid #cbd5e1;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading-text {
+  margin-top: 0.75rem;
+  color: #fff;
+  font-weight: 600;
+}

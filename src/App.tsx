@@ -6,11 +6,14 @@ import { labels, options, initialState, sections } from "./utils/formConfig";
 import { formDataToCSV } from "./utils/formUtils";
 import FieldGroup from "./components/FieldGroup";
 
+/**
+ * Type helpers
+ */
 type FormKey = keyof typeof initialState;
-
 type FormData = typeof initialState;
 
 const App = () => {
+  /** -------------------- state -------------------- */
   const [formData, setFormData] = useState<FormData>(() => {
     const saved = localStorage.getItem("smartphone-form");
     return saved ? (JSON.parse(saved) as FormData) : initialState;
@@ -18,6 +21,7 @@ const App = () => {
   const [errors, setErrors] = useState<Partial<Record<FormKey, boolean>>>({});
   const [progress, setProgress] = useState(0);
   const [showToast, setShowToast] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // <— NEW
   const [dark, setDark] = useState(false);
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
@@ -26,7 +30,7 @@ const App = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const target = e.target as HTMLInputElement | HTMLSelectElement;
+    const target = e.target;
     const { name, value } = target;
     const key = name as FormKey;
     const isCheckbox = (target as HTMLInputElement).type === "checkbox";
@@ -48,7 +52,7 @@ const App = () => {
     const newErrors: Partial<Record<FormKey, boolean>> = {};
     fields.forEach((k) => {
       const v = formData[k];
-      if (!v || (Array.isArray(v) && v.length === 0)) newErrors[k] = true;
+      if (!v || (Array.isArray(v) && !v.length)) newErrors[k] = true;
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -67,6 +71,7 @@ const App = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true); // show loader
     const csv = formDataToCSV(formData);
     const blob = new Blob([csv], { type: "text/csv" });
     const formDataUpload = new FormData();
@@ -81,6 +86,9 @@ const App = () => {
       navigate("/result", { state: { prediction: result.prediction.label } });
     } catch (err) {
       console.error("❌ Upload failed:", err);
+      alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
+    } finally {
+      setIsLoading(false); // hide loader no matter what
     }
   };
 
@@ -113,6 +121,14 @@ const App = () => {
 
   return (
     <div className="container">
+      {/* Loading overlay */}
+      {isLoading && (
+        <div className="loading-overlay">
+          <div className="spinner"></div>
+          <p className="loading-text">กำลังประมวลผล...</p>
+        </div>
+      )}
+
       <div className="progress-wrapper">
         <div className="progress-bar" style={{ width: `${progress}%` }}></div>
       </div>
@@ -157,15 +173,14 @@ const App = () => {
             </button>
           )}
           {step === sections.length - 1 && (
-            <button type="submit" className="submit-button">
-              ยืนยันและส่ง
+            <button type="submit" className="submit-button" disabled={isLoading}>
+              {isLoading ? "กำลังส่ง..." : "พยากรณ์สมาร์ทโฟนที่เหมาะกับคุณ"}
             </button>
           )}
         </div>
       </form>
 
       {showToast && <div className="toast">กรุณากรอกข้อมูลให้ครบถ้วน</div>}
-
 
       <div className="toggle-dark" onClick={() => setDark(!dark)}>
         {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
