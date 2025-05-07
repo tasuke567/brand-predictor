@@ -15,9 +15,10 @@ import FeedbackForm from "../components/FeedbackForm";
 import { brandThemes } from "../utils/brandThemes";
 import { useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
-import { darkBrandThemes } from "../utils/darkBrandThemes";
 
-import { mode } from "../context/ThemeContext";
+
+
+
 const PredictionResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -41,18 +42,8 @@ const PredictionResult = () => {
   ];
 
   useEffect(() => {
-    const themeMap = mode === "dark" ? darkBrandThemes : brandThemes;
-    const theme = themeMap[prediction.toLowerCase()] || themeMap.default;
-  
-    document.body.classList.toggle("dark", mode === "dark");
-  
-    const root = document.documentElement;
-    root.style.removeProperty("--color-bg");
-    root.style.removeProperty("--color-text");
-    root.style.removeProperty("--color-primary");
-  
-    // หรือไม่ต้องเซ็ตอะไรเลย แล้วให้ dark/light ใช้ผ่าน body.dark
-  }, [mode, prediction]);
+    setPrediction(prediction);
+  }, [prediction]);
   
 
   return (
