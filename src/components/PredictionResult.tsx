@@ -4,7 +4,7 @@ import {
   XAxis,
   YAxis,
   // CartesianGrid,
-  // Tooltip,
+  Tooltip,
   // LineChart,
   // Line,
   ResponsiveContainer,
@@ -70,10 +70,11 @@ const PredictionResult = () => {
       />
       <section className="chart-wrapper">
         <h3>📈 ความน่าจะเป็นของแต่ละแบรนด์</h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={chartData}>
+        <ResponsiveContainer width="100%" aspect={2}>
+          <BarChart data={chartData.filter((d) => d.prob > 0)}>
             <XAxis dataKey="brand" />
-            <YAxis unit="%" />
+            <YAxis unit="%" domain={[0, 100]} />
+            <Tooltip formatter={(v: number) => `${v} %`} />
             <Bar dataKey="prob" fill={theme.primary} />
           </BarChart>
         </ResponsiveContainer>
