@@ -7,7 +7,7 @@
 //----------------------------------------------------------------
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { api } from "@/lib/api";
 interface AuthCtx {
   isAuthed: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -15,30 +15,32 @@ interface AuthCtx {
 }
 
 const Ctx = createContext<AuthCtx>(null as any);
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const navigate = useNavigate();
-  const [isAuthed, setIsAuthed] = useState(() => sessionStorage.getItem("authed") === "1");
+  const [isAuthed, setIsAuthed] = useState(
+    () => sessionStorage.getItem("authed") === "1"
+  );
 
   const login = async (email: string, password: string) => {
-    const res = await fetch(import.meta.env.VITE_API_URL + "/auth/login", {
-      method: "POST",
-      credentials: "include", // IMPORTANT – receive HttpOnly cookie
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-    if (!res.ok) throw new Error("Invalid credentials");
+    await api.post("/auth/login", { email, password });
     sessionStorage.setItem("authed", "1");
     setIsAuthed(true);
     navigate("/admin/dashboard");
   };
 
   const logout = () => {
-    fetch(import.meta.env.VITE_API_URL + "/auth/logout", { credentials: "include" }).catch(() => {});
+    fetch(import.meta.env.VITE_API_URL + "/auth/logout", {
+      credentials: "include",
+    }).catch(() => {});
     sessionStorage.removeItem("authed");
     setIsAuthed(false);
     navigate("/admin/login");
   };
 
-  return <Ctx.Provider value={{ isAuthed, login, logout }}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={{ isAuthed, login, logout }}>{children}</Ctx.Provider>
+  );
 };
 export const useAuth = () => useContext(Ctx);
