@@ -22,6 +22,7 @@ const App = () => {
   const [showToast, setShowToast] = useState(false);
   const [uploadPercent, setUploadPercent] = useState(0); // 0-100
   const [isUploading, setIsUploading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [dark, setDark] = useState(false);
   const [step, setStep] = useState(0);
   const navigate = useNavigate();
@@ -69,32 +70,27 @@ const App = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsUploading(true);
+    setProcessing(false); // รีเซ็ต
     setUploadPercent(0);
-
-    // build csv & form-data
     const csv = formDataToCSV(formData);
     const blob = new Blob([csv], { type: "text/csv" });
-    const fd = new FormData();
+    const fd = new FormData(); // <── ใส่กลับ
     fd.append("file", blob, "predict.csv");
-
-    /**
-     * Use XMLHttpRequest so we can tap into `upload.onprogress`
-     */
     const xhr = new XMLHttpRequest();
     xhr.open("POST", import.meta.env.VITE_API_URL + "/predict", true);
-    const token = localStorage.getItem("token");
-    if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
     xhr.upload.onprogress = (evt) => {
       if (evt.lengthComputable) {
         const pct = Math.round((evt.loaded / evt.total) * 100);
         setUploadPercent(pct);
+        if (pct === 100) setProcessing(true); // 🆕 กำลังประมวลผล
       }
     };
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         setIsUploading(false);
+        setProcessing(false);
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const res = JSON.parse(xhr.responseText);
@@ -161,13 +157,21 @@ const App = () => {
       {/* Loading overlay with real % */}
       {isUploading && (
         <div className="loading-overlay">
-          <div className="loader-bar">
-            <div
-              className="loader-fill"
-              style={{ width: `${uploadPercent}%` }}
-            />
-          </div>
-          <p className="loading-text">อัปโหลด {uploadPercent}%</p>
+          {processing ? (
+            <>
+              <p className="loading-text">กำลังประมวลผล...</p>
+            </>
+          ) : (
+            <>
+              <div className="loader-bar">
+                <div
+                  className="loader-fill"
+                  style={{ width: `${uploadPercent}%` }}
+                />
+              </div>
+              <p className="loading-text">อัปโหลด {uploadPercent}%</p>
+            </>
+          )}
         </div>
       )}
 
@@ -223,8 +227,10 @@ const App = () => {
               className="submit-button"
               disabled={isUploading}
             >
-              {isUploading
-                ? "กำลังอัปโหลด..."
+              {processing
+                ? "กำลังประมวลผล..."
+                : isUploading
+                ? `อัปโหลด ${uploadPercent}%`
                 : "พยากรณ์สมาร์ทโฟนที่เหมาะกับคุณ"}
             </button>
           )}
