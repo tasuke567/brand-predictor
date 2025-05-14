@@ -34,7 +34,7 @@ export default function AdminDashboardPage() {
     setE(null);
     try {
       const [{ data: s }, { data: q }] = await Promise.all([
-        api.get<StatResp>("/admin/stats"),
+        api.get<StatResp>("/admin/stats/brands"),
         api.get<any[]>("/admin/questionnaire"),
       ]);
 
