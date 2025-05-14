@@ -30,10 +30,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     navigate("/admin/dashboard");
   };
 
-  const logout = () => {
-    fetch(import.meta.env.VITE_API_URL + "/auth/logout", {
-      credentials: "include",
-    }).catch(() => {});
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout"); // ✅ ชัวร์กว่า fetch แบบ manual
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
     sessionStorage.removeItem("authed");
     setIsAuthed(false);
     navigate("/admin/login");
