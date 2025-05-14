@@ -3,8 +3,8 @@ import {
   Bar,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
+  // CartesianGrid,
+  // Tooltip,
   // LineChart,
   // Line,
   ResponsiveContainer,
@@ -20,18 +20,22 @@ const PredictionResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { setPrediction } = useTheme();
-  const { label, distribution }: { label?: string; distribution?: Record<string, number> } = location.state || {};
+  const {
+    label,
+    distribution,
+  }: { label?: string; distribution?: Record<string, number> } =
+    location.state || {};
   const prediction = label || "ไม่สามารถคาดการณ์ได้";
   const theme = brandThemes[prediction] || brandThemes.default;
   if (!location.state) {
-  navigate("/", { replace: true });
-  return null;
-}
+    navigate("/", { replace: true });
+    return null;
+  }
 
-  const chartData = Object.entries(distribution || {}).map(([brand, prob]) => ({
-    brand,
-    prob: +(prob * 100).toFixed(2),
-  }));
+  const chartData = Object.entries(distribution || {})
+    .map(([k, v]) => [k.replace(/^'+|'+$/g, ""), v] as [string, number])
+    .sort(([, a], [, b]) => b - a)
+    .map(([brand, prob]) => ({ brand, prob: +(prob * 100).toFixed(1) }));
   // const responseTimeData = [
   //   { name: "User A", time: 380 },
   //   { name: "User B", time: 320 },
@@ -68,10 +72,8 @@ const PredictionResult = () => {
         <h3>📈 ความน่าจะเป็นของแต่ละแบรนด์</h3>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="brand" />
             <YAxis unit="%" />
-            <Tooltip formatter={(v: number) => `${v}%`} />
             <Bar dataKey="prob" fill={theme.primary} />
           </BarChart>
         </ResponsiveContainer>
