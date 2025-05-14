@@ -15,7 +15,7 @@ import { api } from "@/lib/api";
 /* ---------- types ---------------------------------------------------------- */
 export type User = {
   email: string;
-  role: "user" | "admin";
+  role: "user" | "ADMIN";
 };
 
 interface AuthCtx {

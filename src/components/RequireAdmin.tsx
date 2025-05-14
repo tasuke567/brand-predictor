@@ -9,7 +9,7 @@ export default function RequireAdmin({ children }: { children: React.ReactNode }
   if (!user) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
-  if (user.role !== "admin") {
+  if (user.role !== "ADMIN") {
     return <Navigate to="/" replace />;          // หรือ "/403"
   }
   return <>{children}</>;

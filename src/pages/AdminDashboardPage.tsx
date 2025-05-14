@@ -15,8 +15,8 @@ interface BrandStat {
 }
 
 // query keys (tuple literal for strong typing)
-const brandKey = ["admin", "brandStats"] as const;
-const rowsKey  = ["admin", "rows"] as const;
+const brandKey = ["ADMIN", "brandStats"] as const;
+const rowsKey  = ["ADMIN", "rows"] as const;
 
 export default function AdminDashboardPage() {
   const { logout } = useAuth();
