@@ -5,8 +5,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  LineChart,
-  Line,
+  // LineChart,
+  // Line,
   ResponsiveContainer,
 } from "recharts";
 import "../styles/PredictionResult.css";
@@ -16,35 +16,41 @@ import { brandThemes } from "../utils/brandThemes";
 import { useEffect } from "react";
 import { useTheme } from "../context/ThemeContext";
 
-
-
-
 const PredictionResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { setPrediction } = useTheme();
-  const prediction = location.state?.prediction || "ไม่สามารถคาดการณ์ได้";
+  const { label, distribution }: { label?: string; distribution?: Record<string, number> } = location.state || {};
+  const prediction = label || "ไม่สามารถคาดการณ์ได้";
   const theme = brandThemes[prediction] || brandThemes.default;
-  const responseTimeData = [
-    { name: "User A", time: 380 },
-    { name: "User B", time: 320 },
-    { name: "User C", time: 340 },
-    { name: "User D", time: 300 },
-    { name: "User E", time: 360 },
-  ];
+  if (!location.state) {
+  navigate("/", { replace: true });
+  return null;
+}
 
-  const mlProcessingData = [
-    { run: "Run 1", ms: 390 },
-    { run: "Run 2", ms: 395 },
-    { run: "Run 3", ms: 388 },
-    { run: "Run 4", ms: 400 },
-    { run: "Run 5", ms: 392 },
-  ];
+  const chartData = Object.entries(distribution || {}).map(([brand, prob]) => ({
+    brand,
+    prob: +(prob * 100).toFixed(2),
+  }));
+  // const responseTimeData = [
+  //   { name: "User A", time: 380 },
+  //   { name: "User B", time: 320 },
+  //   { name: "User C", time: 340 },
+  //   { name: "User D", time: 300 },
+  //   { name: "User E", time: 360 },
+  // ];
+
+  // const mlProcessingData = [
+  //   { run: "Run 1", ms: 390 },
+  //   { run: "Run 2", ms: 395 },
+  //   { run: "Run 3", ms: 388 },
+  //   { run: "Run 4", ms: 400 },
+  //   { run: "Run 5", ms: 392 },
+  // ];
 
   useEffect(() => {
     setPrediction(prediction);
   }, [prediction]);
-  
 
   return (
     <div className="result-card">
@@ -58,8 +64,20 @@ const PredictionResult = () => {
         alt={`${prediction} logo`}
         className="brand-logo"
       />
-
       <section className="chart-wrapper">
+        <h3>📈 ความน่าจะเป็นของแต่ละแบรนด์</h3>
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="brand" />
+            <YAxis unit="%" />
+            <Tooltip formatter={(v: number) => `${v}%`} />
+            <Bar dataKey="prob" fill={theme.primary} />
+          </BarChart>
+        </ResponsiveContainer>
+      </section>
+
+      {/* <section className="chart-wrapper">
         <h3>📊 Response Time ของผู้ใช้</h3>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={responseTimeData}>
@@ -83,7 +101,7 @@ const PredictionResult = () => {
             <Line type="monotone" dataKey="ms" stroke="#f472b6" />
           </LineChart>
         </ResponsiveContainer>
-      </section>
+      </section> */}
 
       <button
         className="retry-button"
@@ -98,7 +116,7 @@ const PredictionResult = () => {
       </button>
 
       <div className="feedback-section">
-        <FeedbackForm prediction={prediction} />
+        <FeedbackForm prediction={label} />
       </div>
       {/* <p className="theme-label">
           🎨 ธีมของคุณ:{" "}

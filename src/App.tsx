@@ -5,7 +5,6 @@ import { labels, options, initialState, sections } from "./utils/formConfig";
 import { formDataToCSV } from "./utils/formUtils";
 import FieldGroup from "./components/FieldGroup";
 
-
 /**
  * Type helpers
  */
@@ -83,6 +82,8 @@ const App = () => {
      */
     const xhr = new XMLHttpRequest();
     xhr.open("POST", import.meta.env.VITE_API_URL + "/predict", true);
+    const token = localStorage.getItem("token");
+    if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
     xhr.upload.onprogress = (evt) => {
       if (evt.lengthComputable) {
@@ -100,6 +101,16 @@ const App = () => {
             navigate("/result", {
               state: { prediction: res.prediction.label },
             });
+            +(
+              /* -- API คืน { questionnaireId, prediction:{ label, distribution } } -- */
+              navigate("/result", {
+                state: {
+                  questionnaireId: res.questionnaireId,
+                  label: res.prediction.label,
+                  distribution: res.prediction.distribution,
+                },
+              })
+            );
           } catch (_) {
             alert("แปลงผลลัพธ์ไม่สำเร็จ");
           }
@@ -225,7 +236,6 @@ const App = () => {
       <div className="toggle-dark" onClick={() => setDark(!dark)}>
         {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </div>
-      
     </div>
   );
 };

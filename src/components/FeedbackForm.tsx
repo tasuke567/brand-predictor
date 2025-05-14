@@ -5,7 +5,7 @@ import axios from "axios";
 import "../styles/FeedbackForm.css"; // Assuming you have a CSS file for styling
 
 interface FeedbackFormProps {
-  prediction: string;
+  prediction?: string;
 }
 
 const FeedbackForm = ({ prediction }: FeedbackFormProps) => {

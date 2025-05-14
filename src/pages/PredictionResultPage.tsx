@@ -1,9 +1,9 @@
 import PredictionResult from "../components/PredictionResult";
 import Layout from "../components/Layout";
-// import BrandColorPreview from "../components/BrandColorPreview";
-import "../styles/BrandColorPreview.css"; // Adjust the path as necessary
+import "../styles/BrandColorPreview.css"; 
 
 const PredictionResultPage = () => {
+  
 
   return (
     <Layout>
