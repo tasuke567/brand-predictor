@@ -66,111 +66,112 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-6 space-y-10">
-      {/* Header */}
-      <header className="flex items-center justify-between border-b pb-4">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-800 dark:text-gray-100">
-          Admin Dashboard
-        </h1>
-        <Button onClick={logout} variant="outline">
-          Logout
-        </Button>
-      </header>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 px-4 py-6">
+      <div className="max-w-7xl mx-auto space-y-10">
+        {/* Top Bar */}
+        <header className="flex items-center justify-between border-b pb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-800 dark:text-gray-100">
+            Admin Dashboard
+          </h1>
+          <Button onClick={logout} variant="outline">
+            Logout
+          </Button>
+        </header>
 
-      {/* Error */}
-      {error && (
-        <div className="rounded bg-rose-100 text-rose-700 px-4 py-3 text-sm font-medium shadow">
-          ⚠️ {error}
-        </div>
-      )}
-
-      {/* Stats Section */}
-      {loading ? (
-        <div className="grid sm:grid-cols-3 gap-4 animate-pulse">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="h-24 bg-gray-200 dark:bg-gray-800 rounded-xl"
-            />
-          ))}
-        </div>
-      ) : stats ? (
-        <>
-          <section className="grid sm:grid-cols-3 gap-4">
-            <StatCard title="Total forms" value={stats.total} />
-            <StatCard
-              title="Accuracy"
-              value={(stats.accuracy * 100).toFixed(1) + "%"}
-            />
-            <StatCard
-              title="Top brand"
-              value={stats.top3?.[0]?.brand ?? "No data"}
-            />
-          </section>
-
-          {/* Pie Chart */}
-          <section className="w-full h-72">
-            {stats.top3 && stats.top3.length > 0 ? (
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={stats.top3}
-                    dataKey="total"
-                    nameKey="brand"
-                    outerRadius={110}
-                    label={({ brand }) => brand}
-                  >
-                    {["#4f46e5", "#f59e0b", "#10b981"].map((c, i) => (
-                      <Cell key={i} fill={c} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="text-center text-gray-500 py-10">
-                ไม่มีข้อมูลสำหรับแสดงกราฟ 🥲
-              </div>
-            )}
-          </section>
-        </>
-      ) : null}
-
-      {/* Table + Toolbar */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold tracking-tight">
-            Questionnaire List
-          </h2>
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={load}
-              disabled={loading}
-            >
-              🔄 Refresh
-            </Button>
-            <a
-              href={`${api.defaults.baseURL}/admin/report/export`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button size="sm">⬇️ Export CSV</Button>
-            </a>
-          </div>
-        </div>
-
-        {loading ? (
-          <div className="h-48 rounded bg-gray-200 dark:bg-gray-800 animate-pulse" />
-        ) : rows.length > 0 ? (
-          <AdminTable rows={rows} onDelete={handleDelete} loading={loading} />
-        ) : (
-          <div className="text-center text-gray-500 py-8">
-            ไม่มีรายการแบบสอบถามในระบบ 🙌
+        {/* Error Message */}
+        {error && (
+          <div className="rounded bg-rose-100 text-rose-700 px-4 py-3 text-sm font-medium shadow">
+            ⚠️ {error}
           </div>
         )}
-      </section>
+
+        {/* Stats Section */}
+        {loading ? (
+          <div className="grid sm:grid-cols-3 gap-4 animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-24 bg-gray-200 dark:bg-gray-800 rounded-xl"
+              />
+            ))}
+          </div>
+        ) : stats ? (
+          <>
+            <section className="grid sm:grid-cols-3 gap-4">
+              <StatCard title="Total forms" value={stats.total} />
+              <StatCard
+                title="Accuracy"
+                value={
+                  typeof stats.accuracy === "number"
+                    ? (stats.accuracy * 100).toFixed(1) + "%"
+                    : "-"
+                }
+              />
+              <StatCard
+                title="Top brand"
+                value={stats.top3?.[0]?.brand ?? "No data"}
+              />
+            </section>
+
+            {/* Pie Chart */}
+            <section className="w-full h-72 border rounded-xl bg-white dark:bg-gray-900 p-4 shadow">
+              <h3 className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200">
+                Brand Prediction Share
+              </h3>
+              {stats.top3 && stats.top3.length > 0 ? (
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      data={stats.top3}
+                      dataKey="total"
+                      nameKey="brand"
+                      outerRadius={110}
+                      label={({ brand }) => brand}
+                    >
+                      {["#4f46e5", "#f59e0b", "#10b981"].map((c, i) => (
+                        <Cell key={i} fill={c} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center text-gray-500 dark:text-gray-400 py-10">
+                  ไม่มีข้อมูลสำหรับแสดงกราฟ 🥲
+                </div>
+              )}
+            </section>
+          </>
+        ) : null}
+
+        {/* Table Section */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <h2 className="text-lg font-semibold tracking-tight">
+              Questionnaire List
+            </h2>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={load}
+                disabled={loading}
+              >
+                🔄 Refresh
+              </Button>
+              <a
+                href={`${api.defaults.baseURL}/admin/report/export`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button size="sm">⬇️ Export CSV</Button>
+              </a>
+            </div>
+          </div>
+
+          <AdminTable rows={rows} onDelete={handleDelete} loading={loading} />
+        </section>
+      </div>
     </div>
   );
 }
