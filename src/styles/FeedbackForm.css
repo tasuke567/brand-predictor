@@ -6,6 +6,7 @@
   .feedback-form input[type="range"] {
     width: 100%;
     margin-top: 0.25rem;
+    color: #0d001e ;
   }
   
   .submit-feedback-button {

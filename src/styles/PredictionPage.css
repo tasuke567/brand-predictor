@@ -35,6 +35,7 @@
   .feedback-section {
     margin-top: 2rem;
     text-align: left;
+ 
   }
   
   .feedback-section label {
@@ -42,4 +43,6 @@
     margin-top: 1rem;
     font-weight: 500;
   }
-  
+  .action-button,
+.submit-button { width: 100%; max-width: 220px; }
+.chart-container { overflow-x: auto; }

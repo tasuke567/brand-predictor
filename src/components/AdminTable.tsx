@@ -1,64 +1,66 @@
-import { Button } from "./ui/Button";
+// components/AdminTable.tsx
+import "../styles/admin-table.css";
 
-/** แถวในตาราง */
-export interface Row {
-  id: number;
-  brand: string;
-  createdAt: string;
-  user?: string;
+export interface Column<T> {
+  header: string;
+  cell: (row: T) => React.ReactNode;
+  hideOnMobile?: boolean;
 }
 
-interface AdminTableProps {
-  rows: Row[];
-  onDelete: (id: number) => Promise<void>;
+export const AdminTable = <T,>({
+  columns,
+  data,
+  loading,
+  keyField,
+}: {
+  columns: Column<T>[];
+  data: T[];
   loading?: boolean;
-}
-
-export function AdminTable({ rows, onDelete, loading }: AdminTableProps) {
-  if (loading)
-    return (
-      <div className="table-state">
-        <span className="spinner" />
-        <span>กำลังโหลด…</span>
-      </div>
-    );
-
-  if (!rows.length)
-    return <div className="table-state">😶 ยังไม่มีแบบสอบถามในระบบ</div>;
-
-  return (
-    <div className="card table-wrapper">
-      <table className="datatable">
-        <thead>
-          <tr>
-            <th style={{ width: 60 }}>ID</th>
-            <th>Brand</th>
-            <th>Created</th>
-            <th>User</th>
-            <th style={{ width: 70, textAlign: "right" }}>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {rows.map((r, idx) => (
-            <tr key={r.id} className={idx % 2 ? "row-alt" : undefined}>
-              <td>{r.id}</td>
-              <td>{r.brand}</td>
-              <td>{new Date(r.createdAt).toLocaleDateString()}</td>
-              <td>{r.user ?? "-"}</td>
-              <td style={{ textAlign: "right" }}>
-                <Button
-                  title="ลบรายการนี้"
-                  className="btn-icon"
-                  onClick={() => onDelete(r.id)}
-                >
-                  🗑️
-                </Button>
+  keyField: keyof T;
+}) => (
+  <table className="admin-table">
+    <thead className="bg-muted">
+      <tr>
+        {columns.map((c) => (
+          <th
+            key={c.header}
+            className={c.hideOnMobile ? "hide-mobile" : "px-4 py-2"}
+          >
+            {c.header}
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {loading ? (
+        <tr>
+          <td colSpan={columns.length} className="admin-table__state">
+            Loading…
+          </td>
+        </tr>
+      ) : data.length === 0 ? (
+        <tr>
+          <td colSpan={columns.length} className="p-6 text-center">
+            No data
+          </td>
+        </tr>
+      ) : (
+        data.map((row) => (
+          <tr key={String(row[keyField])} className="odd:bg-muted/40">
+            {columns.map((c, i) => (
+              <td
+                key={i}
+                className={
+                  c.hideOnMobile ? "px-4 py-2 hidden md:table-cell" : "px-4 py-2"
+                }
+              >
+                {c.cell(row)}
               </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
+            ))}
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+);
+export default AdminTable;

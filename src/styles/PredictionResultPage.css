@@ -1,0 +1,13 @@
+/* PredictionResultPage.css */
+.page-title {
+  text-align: center;     /* จัดกลางแนวนอน */
+  margin: 2rem 0 1.5rem;  /* ระยะห่างบน–ล่าง */
+  font-size: 1.75rem;     /* ปรับขนาดตามใจ */
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* เดสก์ท็อปขยายใหญ่ขึ้นนิด */
+@media (min-width: 640px) {
+  .page-title { font-size: 2rem; }
+}

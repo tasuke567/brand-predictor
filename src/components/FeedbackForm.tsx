@@ -47,7 +47,7 @@ const FeedbackForm = ({ prediction }: FeedbackFormProps) => {
     setSubmitting(true);
     try {
       await axios.post(
-        import.meta.env.VITE_API_URL + "/feedback",
+        import.meta.env.VITE_API_URL || "https://waka-api-hw3h.onrender.com" + "/feedback",
         {
           prediction,
           uiEase,

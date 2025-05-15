@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-
+import "../styles/Layout.css"; 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="layout">
       <header className="header">
-        <h1>📱 Brand Predictor</h1>
+        <h1>📱 พยากรณ์สมาร์ตโฟนที่เหมาะกับคุณ</h1>
       </header>
 
       <main className="main-content">{children}</main>

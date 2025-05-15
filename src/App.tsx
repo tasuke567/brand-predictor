@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { labels, options, initialState, sections } from "./utils/formConfig";
 import { formDataToCSV } from "./utils/formUtils";
 import FieldGroup from "./components/FieldGroup";
-
+import Layout from "./components/Layout";
 /**
  * Type helpers
  */
@@ -77,7 +77,12 @@ const App = () => {
     const fd = new FormData(); // <── ใส่กลับ
     fd.append("file", blob, "predict.csv");
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", import.meta.env.VITE_API_URL + "/predict", true);
+    xhr.open(
+      "POST",
+      import.meta.env.VITE_API_URL ||
+        "https://waka-api-hw3h.onrender.com" + "/predict",
+      true
+    );
 
     xhr.upload.onprogress = (evt) => {
       if (evt.lengthComputable) {
@@ -153,7 +158,9 @@ const App = () => {
   const currentSection = sections[step];
 
   return (
-    <div className="container">
+    
+      <div className="container">
+        <Layout>
       {/* Loading overlay with real % */}
       {isUploading && (
         <div className="loading-overlay">
@@ -183,30 +190,38 @@ const App = () => {
         {currentSection.fields.length ? (
           <div className="form-step-active fade-in fade-transition">
             <div className="form-section-title">{currentSection.title}</div>
-            {currentSection.fields.map((field) => (
-              <FieldGroup
-                key={field}
-                label={labels[field as FormKey]}
-                name={field as FormKey}
-                multiple={Array.isArray(initialState[field as FormKey])}
-                value={formData[field as FormKey]}
-                error={errors[field as FormKey]}
-                onChange={handleChange}
-                options={options[field as FormKey]}
-              />
-            ))}
+            <div className="form-grid">
+              {currentSection.fields.map((field) => (
+                <FieldGroup
+                  key={field}
+                  label={labels[field as FormKey]}
+                  name={field as FormKey}
+                  multiple={Array.isArray(initialState[field as FormKey])}
+                  value={formData[field as FormKey]}
+                  error={errors[field as FormKey]}
+                  onChange={handleChange}
+                  options={options[field as FormKey]}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <div className="summary-section fade-in">
             <h2 className="form-section-title">{currentSection.title}</h2>
-            {(Object.keys(labels) as FormKey[]).map((k) => (
-              <div key={k} className="summary-item">
-                <strong>{labels[k]}</strong>:{" "}
-                {Array.isArray(formData[k])
-                  ? (formData[k] as string[]).join(", ")
-                  : formData[k] || "-"}
-              </div>
-            ))}
+
+            {/* ⬇️ เปลี่ยน div-list → definition list */}
+            <dl className="summary-grid">
+              {(Object.keys(labels) as FormKey[]).map((k) => (
+                <React.Fragment key={k}>
+                  <dt className="summary-term">{labels[k]}</dt>
+                  <dd className="summary-desc">
+                    {Array.isArray(formData[k])
+                      ? (formData[k] as string[]).join(", ")
+                      : formData[k] || "-"}
+                  </dd>
+                </React.Fragment>
+              ))}
+            </dl>
           </div>
         )}
 
@@ -231,7 +246,7 @@ const App = () => {
                 ? "กำลังประมวลผล..."
                 : isUploading
                 ? `อัปโหลด ${uploadPercent}%`
-                : "พยากรณ์สมาร์ทโฟนที่เหมาะกับคุณ"}
+                : "พยากรณ์สมาร์ตโฟนที่เหมาะกับคุณ"}
             </button>
           )}
         </div>
@@ -242,7 +257,10 @@ const App = () => {
       <div className="toggle-dark" onClick={() => setDark(!dark)}>
         {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
       </div>
+      </Layout>
     </div>
+    
+    
   );
 };
 

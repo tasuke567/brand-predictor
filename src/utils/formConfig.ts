@@ -18,19 +18,19 @@ export const initialState = {
 export const sections = [
   {
     title: "ข้อมูลพื้นฐาน",
-    fields: ["gender", "ageRange", "maritalStatus", "occupation", "income"],
-  },
-  {
-    title: "พฤติกรรมการใช้งาน",
-    fields: ["apps", "activities", "dailyUsage"],
-  },
-  {
-    title: "พฤติกรรมการใช้งาน (ต่อ)",
     fields: [
+      "gender",
+      "ageRange",
+      "maritalStatus",
+      "occupation",
+      "income",
+      "dailyUsage",
       "importance",
       "purchaseFactors",
       "satisfaction",
       "onlinePurchaseIssues",
+      "apps",
+      "activities",
     ],
   },
   {
@@ -46,12 +46,12 @@ export const labels = {
   occupation: "อาชีพ",
   income: "รายได้ต่อเดือน",
   apps: "แอปที่ใช้เป็นประจำ",
-  activities: "กิจกรรมที่ใช้สมาร์ทโฟนมากที่สุด 3 อันดับ",
-  dailyUsage: "ระยะเวลาการใช้งาน",
-  importance: "ความสำคัญของสมาร์ทโฟน",
-  purchaseFactors: "ปัจจัยเมื่อซื้อสมาร์ทโฟน",
-  satisfaction: "ระดับความพึงพอใจ",
-  onlinePurchaseIssues: "ปัญหาในการซื้อออนไลน์",
+  activities: "กิจกรรมที่ใช้สมาร์ตโฟนมากที่สุด 3 อันดับ",
+  dailyUsage: "ระยะเวลาการใช้งานสมาร์ตโฟนต่อวัน",
+  importance: "ความสำคัญของสมาร์ตโฟน",
+  purchaseFactors: "ปัจจัยเมื่อซื้อสมาร์ตโฟน",
+  satisfaction: "ระดับความพึงพอใจของการใช้งานสมาร์ตโฟนปัจจุบัน",
+  onlinePurchaseIssues: "ปัญหาที่พบเมื่อซื้อสมาร์ตโฟนออนไลน์",
 };
 
 export const options = {

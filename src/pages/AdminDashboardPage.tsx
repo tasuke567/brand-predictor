@@ -1,163 +1,158 @@
-import { useCallback, useMemo } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, useCallback, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { AdminTable, Row } from "@/components/AdminTable";
+import { AdminTable, Column } from "@/components/AdminTable";
+import { Pagination } from "@/components/ui/Pagination";
 import { Button } from "@/components/ui/Button";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { api } from "@/lib/api";
+import { Card, CardContent } from "@/components/ui/card";
+import { api, DashboardRow } from "@/lib/api";
+import "../styles/dashboard-style.css"; // 👈 ใส่บรรทัดนี้ไว้บนสุด
 
-// -----------------------------------------------------------------------------
-// 🏷️ Types
-// -----------------------------------------------------------------------------
-interface BrandStat {
-  brand: string;
-  total: number;
-}
-
-// query keys (tuple literal for strong typing)
-const brandKey = ["ADMIN", "brandStats"] as const;
-const rowsKey  = ["ADMIN", "rows"] as const;
+/* ------------------------------------------------------------------
+   query key helper
+   ------------------------------------------------------------------*/
+const rowsKey = (from: string, to: string) =>
+  ["ADMIN", "rows", from, to] as const;
 
 export default function AdminDashboardPage() {
   const { logout } = useAuth();
-  const qc = useQueryClient();
+  const navigate = useNavigate();
 
-  // ---------------------------------------------------------------------------
-  // 📊 Brand distribution
-  // ---------------------------------------------------------------------------
-  const {
-    data: brandStats = [],
-    isPending: brandLoading,
-    error: brandError,
-    refetch: refetchBrand,
-  } = useQuery<BrandStat[], Error, BrandStat[], typeof brandKey>({
-    queryKey: brandKey,
-    queryFn: async () => {
-      const { data } = await api.get<BrandStat[]>("/stats/brands");
-      return data;
-    },
-    staleTime: 60_000,
-    retry: false,
-  });
+  /* ---------------- filter state ---------------- */
+  const todayObj = new Date();
+  const today = todayObj.toISOString().split("T")[0]; // วันนี้
+  const lastWeek = new Date(todayObj.getTime() - 6 * 864e5) // 6 วันก่อน
+    .toISOString()
+    .split("T")[0];
 
-  // ---------------------------------------------------------------------------
-  // 📋 Questionnaire list
-  // ---------------------------------------------------------------------------
+  const [dateFrom, setDateFrom] = useState<string>(lastWeek); // ⬅️ ใช้ 7-day window
+  const [dateTo, setDateTo] = useState<string>(today);
+
+  /* ---------------- pagination state ------------ */
+  const [page, setPage] = useState<number>(1);
+  const pageSize = 10;
+
+  /* ---------------- rows query ------------------ */
   const {
     data: rows = [],
     isPending: rowsLoading,
-    error: rowsError,
     refetch: refetchRows,
-  } = useQuery<Row[], Error, Row[], typeof rowsKey>({
-    queryKey: rowsKey,
+  } = useQuery<DashboardRow[]>({
+    queryKey: rowsKey(dateFrom, dateTo),
     queryFn: async () => {
-      const { data } = await api.get<any[]>("/admin/questionnaire");
-      return data.map<Row>((q) => ({
+      const { data } = await api.get<any[]>("/admin/questionnaire", {
+        params: { from: dateFrom, to: dateTo },
+      });
+      return data.map<DashboardRow>((q) => ({
         id: q.id,
         brand: q.prediction?.label ?? "-",
         createdAt: q.createdAt,
-        user: q.user?.email ?? "anonymous",
+        user: q.user,
       }));
     },
-    staleTime: 30_000,
-    retry: false,
+    staleTime: 0,
+    gcTime: 0,
   });
 
-  const loading  = brandLoading || rowsLoading;
-  const errorMsg = brandError?.message ?? rowsError?.message ?? null;
+  /* ---------------- columns --------------------- */
+  const columns: Column<DashboardRow>[] = [
+    { header: "ID", cell: (r) => r.id },
+    { header: "Brand", cell: (r) => r.brand || "-" },
+    {
+      header: "Created",
+      cell: (r) => new Date(r.createdAt).toLocaleDateString(),
+      hideOnMobile: true,
+    },
+    { header: "User", cell: (r) => r.user ?? "-" },
+  ];
 
-  // ---------------------------------------------------------------------------
-  // 🧮 Derived values
-  // ---------------------------------------------------------------------------
-  const totalForms = useMemo(() => brandStats.reduce((sum, b) => sum + b.total, 0), [brandStats]);
-  const topBrand   = useMemo(() => brandStats.slice().sort((a,b) => b.total - a.total)[0]?.brand ?? "-", [brandStats]);
+  /* ---------------- derived: pagedRows ---------- */
+  const pagedRows = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return rows.slice(start, start + pageSize);
+  }, [rows, page]);
 
-  // ---------------------------------------------------------------------------
-  // 🗑️ Delete helper
-  // ---------------------------------------------------------------------------
-  const handleDelete = useCallback(async (id: number) => {
-    if (!confirm(`Delete questionnaire #${id}?`)) return;
-    try {
-      await api.delete(`/admin/questionnaire/${id}`);
-      qc.invalidateQueries({ queryKey: rowsKey });
-    } catch (err: any) {
-      alert(err?.response?.data?.error ?? "Delete failed");
-    }
-  }, [qc]);
+  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
 
-  // สีชิ้นพาย (วนลูปตามจำนวนแบรนด์)
-  const pieColors = useMemo(() => ["#4f46e5", "#f59e0b", "#10b981", "#ec4899", "#14b8a6"], []);
+  /* ---------------- helpers --------------------- */
+  const onChangeDate = useCallback(
+    (setter: typeof setDateFrom) =>
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setter(e.target.value);
+        setPage(1); // reset page when filter changes
+      },
+    []
+  );
 
-  // ---------------------------------------------------------------------------
-  // 🖼️ UI
-  // ---------------------------------------------------------------------------
+  /* ---------------- UI -------------------------- */
   return (
-    <div className="page-wrapper">
-      {/* ── Top bar ─────────────────────────────────────────── */}
-      <header className="topbar">
-        <h1 className="topbar__title">Admin Dashboard</h1>
-        <Button onClick={logout} variant="outline">Logout</Button>
+    <div className="page-wrapper space-y-6">
+      {/* Topbar */}
+      <header className="topbar flex justify-between items-center">
+        <h1 className="topbar__title text-xl font-semibold">Admin Dashboard</h1>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            className="min-w-[140px]"
+            onClick={() => navigate("/admin/models")}
+          >
+            ⚙️ จัดการโมเดล
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="min-w-[100px]"
+            onClick={() => logout()}
+          >
+            Logout
+          </Button>
+        </div>
       </header>
 
-      {/* ── Alerts ──────────────────────────────────────────── */}
-      {errorMsg && <div className="alert alert--error">⚠️ {errorMsg}</div>}
-
-      {/* ── Stats summary ───────────────────────────────────── */}
-      {!loading && (
-        <section className="stats-summary" style={{ marginBottom: "1.5rem", textAlign: "center" }}>
-          <p style={{ margin: ".25rem 0" }}><strong>Total Forms:</strong> {totalForms}</p>
-          <p style={{ margin: ".25rem 0" }}><strong>Top Brand:</strong> {topBrand}</p>
-        </section>
-      )}
-
-      {/* ── Pie chart ──────────────────────────────────────── */}
-      {!loading && (
-        <section className="card" style={{ height: "18rem" }}>
-          <h3>Brand Prediction Share</h3>
-          {brandStats.length ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={brandStats}
-                  dataKey="total"
-                  nameKey="brand"
-                  outerRadius={110}
-                  label={({ brand }) => brand}
-                >
-                  {brandStats.map((_, i) => (
-                    <Cell key={i} fill={pieColors[i % pieColors.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          ) : (
-            <p className="text-muted">No data</p>
-          )}
-        </section>
-      )}
-
-      {/* ── Table ───────────────────────────────────────────── */}
-      <section className="card">
-        <header className="card__header">
-          <h2>Questionnaire List</h2>
-          <div className="card__actions">
-            <Button size="sm" variant="outline" disabled={loading} onClick={() => { refetchBrand(); refetchRows(); }}>
-              🔄 Refresh
-            </Button>
-            <a
-              href={`${api.defaults.baseURL}/admin/report/export`}
-              className="btn btn--primary btn--sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ⬇️ Export CSV
-            </a>
+      {/* Filters */}
+      <Card>
+        <CardContent className="filter-form flex gap-3 flex-wrap">
+          <div className="flex flex-col">
+            <label>จากวันที่</label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={onChangeDate(setDateFrom)}
+            />
           </div>
-        </header>
+          <div className="flex flex-col">
+            <label>ถึงวันที่</label>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={onChangeDate(setDateTo)}
+            />
+          </div>
+          <Button size="sm" variant="outline" onClick={() => refetchRows()}>
+            🔍 Filter
+          </Button>
+          <Button variant="outline" size="sm" fullWidth>
+            ⬇️ Export
+          </Button>
+        </CardContent>
+      </Card>
 
-        <AdminTable rows={rows} onDelete={handleDelete} loading={loading} />
-      </section>
+      {/* Table */}
+      <Card>
+        <CardContent className="">
+          <AdminTable
+            data={pagedRows}
+            columns={columns}
+            keyField="id"
+            loading={rowsLoading}
+          />
+          {pageCount > 1 && (
+            <Pagination page={page} pageCount={pageCount} setPage={setPage} />
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

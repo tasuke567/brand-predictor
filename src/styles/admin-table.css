@@ -1,0 +1,47 @@
+/* admin-table.css */
+
+/* ---------- Table wrapper ---------- */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;              /* text-sm */
+}
+
+/* ---------- Header row ---------- */
+.admin-table thead {
+  background: var(--color-muted, #f3f4f6);  /* bg-muted */
+  text-align: left;
+  font-weight: 600;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.5rem 1rem;            /* px-4 py-2 */
+  white-space: nowrap;
+}
+
+/* ---------- Zebra striping ---------- */
+.admin-table tbody tr:nth-child(odd) {
+  background: rgba(0, 0, 0, 0.04); /* odd:bg-muted/40 */
+}
+
+/* ---------- Loading & empty states ---------- */
+.admin-table__state {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-muted-foreground, #6b7280);
+}
+
+/* ---------- Hide columns on mobile ---------- */
+@media (max-width: 767px) {
+  .hide-mobile {                     /* เพิ่ม class นี้บน th/td ที่ต้องซ่อน */
+    display: none;
+  }
+}
+
+/* ---------- Dark-mode tweak (optional) ---------- */
+.dark .admin-table thead {
+  background: #334155;              /* เข้มขึ้นใน dark */
+  color: #f3f4f6;
+}

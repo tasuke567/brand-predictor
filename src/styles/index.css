@@ -1,29 +1,39 @@
-/* Google Fonts */
+/* =========================================================
+   🌐 Global Reset & Variables
+   ========================================================= */
 @import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 :root {
   --color-bg: #f9fafb;
   --color-text: #111827;
   --color-primary: #3b82f6;
-  --color-card: #ffffff;
   --color-primary-hover: #2563eb;
+  --color-card: #ffffff;
   --color-border: #d1d5db;
   --color-error: #ef4444;
   --color-modal-bg: rgba(0, 0, 0, 0.4);
   --color-toast-bg: #ffffff;
   --color-toast-shadow: rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
+  --transition-fast: 0.3s ease-in-out;
 }
 
 body {
-  font-family: "Kanit", sans-serif;
-  background-color: var(--color-bg);
   margin: 0;
   padding: 0;
+  font-family: "Kanit", sans-serif;
+  background: var(--color-bg);
   color: var(--color-text);
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color var(--transition-fast),
+    color var(--transition-fast);
 }
 
+/* ---------- Dark mode ---------- */
 body.dark {
   --color-bg: #1f2937;
   --color-text: #f9fafb;
@@ -36,103 +46,54 @@ body.dark {
   --color-toast-shadow: rgba(255, 255, 255, 0.1);
 }
 
-button {
-  background-color: var(--color-primary);
-}
-
-.retry-button:hover {
-  background-color: var(--color-primary-hover);
-}
-
+/* =========================================================
+   🧩 Layout Helpers
+   ========================================================= */
 .container {
+  width: 100%;
   max-width: 960px;
   margin: 1rem auto;
   padding: 2rem;
-  background-color: var(--color-card);
+  background: var(--color-card);
   border-radius: 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transition: background-color 0.3s;
+  transition: background-color var(--transition-fast);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-}
-
-.progress-wrapper {
-  height: 8px;
-  background-color: #e5e7eb;
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(to right, #60a5fa, #2563eb);
-  transition: width 0.3s ease-in-out;
-}
-
-.form-section-rows {
-  display: none;
+  gap: 0.5rem;
 }
 
 .form-step-active {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: grid; /* 🡅 grid เต็มฟอร์ม */
+  gap: 0.5rem;
 }
 
-@media (min-width: 768px) {
-  .form-section-rows {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  .form-section-left,
-  .form-section-right {
-    flex: 1;
-  }
-  .form-section-left {
-    padding-right: 1rem;
-  }
-  .form-section-right {
-    padding-left: 1rem;
-  }
+/* ---------- 2-Column grid (≥640 px) ---------- */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280, 1fr));
+  gap: 1rem;
+}
+.form-grid .full-width {
+  grid-column: 1 / -1;
 }
 
-.form-section-title {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
-}
-
+/* =========================================================
+   🖼 Form Controls
+   ========================================================= */
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0.5rem;
-  position: relative;
+  gap: 0.5rem;
 }
 
 .form-label {
-  margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #374151;
   font-size: 0.95rem;
-}
-
-.form-select {
-  padding: 0.75rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-  font-size: 0.9rem;
-  background-color: white;
-  transition: border-color 0.2s;
-}
-
-.form-select:focus {
-  border-color: var(--color-primary);
-  outline: none;
+  color: #374151;
 }
 
 .form-error {
@@ -141,20 +102,12 @@ button {
 }
 
 @keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
+  25%,
+  75% {
     transform: translateX(-4px);
   }
   50% {
     transform: translateX(4px);
-  }
-  75% {
-    transform: translateX(-4px);
-  }
-  100% {
-    transform: translateX(0);
   }
 }
 
@@ -163,7 +116,6 @@ button {
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-
 .checkbox-label {
   display: flex;
   align-items: center;
@@ -174,61 +126,104 @@ button {
 .error-text {
   color: var(--color-error);
   font-size: 0.875rem;
-  margin-top: 0.25rem;
 }
+
+/* =========================================================
+   🔘 Buttons (responsive)
+   ========================================================= */
+
+/* —— ฐานร่วม ——————————————————— */
 
 .submit-button,
 .step-button {
-  background-color: var(--color-primary);
-  color: white;
+  background: var(--color-primary);
+  color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 10px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color var(--transition-fast);
+  width: 100%; /* 🟢 มือถือ: ปุ่มเต็มความกว้าง */
 }
 
+button:hover,
 .submit-button:hover,
 .step-button:hover {
-  background-color: var(--color-primary-hover);
+  background: var(--color-primary-hover);
 }
 
+.button-ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+}
+
+.button-ghost:hover {
+  background: var(--color-bg);
+}
+
+/* —— กลุ่มปุ่ม —— */
 .form-submit-wrapper {
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* 🟢 มือถือ: เรียงลง */
   gap: 1rem;
-  margin-top: 0.5rem;
+  width: 100%;
 }
 
+/* —— จอ ≥ 640 px: กลับมาเรียงแนวนอน + กว้างตามเนื้อ —— */
+@media (min-width: 640px) {
+  .form-submit-wrapper {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .form-submit-wrapper button,
+  .form-submit-wrapper .button-ghost {
+    width: auto; /* ให้ขนาดตามเนื้อข้อความ */
+  }
+}
+
+/* =========================================================
+   📈 Progress Bar
+   ========================================================= */
+.progress-wrapper {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, #60a5fa, #2563eb);
+  transition: width var(--transition-fast);
+}
+
+/* =========================================================
+   📋 Modal
+   ========================================================= */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: var(--color-modal-bg);
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  overflow-y: auto;
+  background: var(--color-modal-bg);
   padding: 1rem;
+  overflow-y: auto;
+  z-index: 1000;
 }
-
 .modal-content {
-  max-height: 90vh; /* ✅ ไม่เกินความสูงหน้าจอ */
-  overflow-y: auto; /* ✅ ถ้าเกิน ให้ scroll */
-  background-color: var(--color-card);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--color-card);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  max-width: 600px;
-  width: 100%;
   animation: slideUp 0.4s ease-out;
 }
-
 @keyframes slideUp {
   from {
     transform: translateY(50px);
@@ -239,7 +234,6 @@ button {
     opacity: 1;
   }
 }
-
 .modal-close {
   position: absolute;
   top: 0.75rem;
@@ -248,14 +242,95 @@ button {
   cursor: pointer;
   color: #6b7280;
 }
-
 .modal-text {
   font-size: 1.25rem;
   font-weight: bold;
   color: var(--color-primary-hover);
 }
 
-/* Toggle dark mode helper class */
+/* =========================================================
+   🔔 Toast
+   ========================================================= */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 1.5rem;
+  background: var(--color-toast-bg);
+  color: var(--color-text);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px var(--color-toast-shadow);
+  z-index: 1001;
+  animation: fadeInOut 3s ease-in-out;
+}
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  10%,
+  90% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+}
+
+/* =========================================================
+   📄 Datatable (responsive)
+   ========================================================= */
+.table-wrapper {
+  overflow-x: auto;
+}
+.datatable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  min-width: 640px; /* 👈 ป้องกันบีบจนพัง */
+}
+.datatable th,
+.datatable td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.datatable thead {
+  background: var(--color-bg);
+  font-weight: 600;
+}
+.row-alt {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* =========================================================
+   📱 Media Queries (desktop first tweaks)
+   ========================================================= */
+@media (min-width: 768px) {
+  .form {
+    gap: 2.5rem;
+  }
+}
+
+/* =========================================================
+   ✨ Animations & Misc
+   ========================================================= */
+.fade-transition {
+  animation: fadeIn var(--transition-fast);
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .toggle-dark {
   position: fixed;
   bottom: 1rem;
@@ -268,197 +343,154 @@ button {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Toast notification */
-.toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--color-toast-bg);
-  color: var(--color-text);
-  padding: 1rem 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 6px 20px var(--color-toast-shadow);
-  z-index: 1001;
-  animation: fadeInOut 3s ease-in-out;
-}
-
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) translateX(-50%);
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(0) translateX(-50%);
-  }
-  90% {
-    opacity: 1;
-    transform: translateY(0) translateX(-50%);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(20px) translateX(-50%);
-  }
-}
-
-.fade-transition {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .csv-preview {
   background: #f3f4f6;
-  padding: 1rem;
   border-radius: 8px;
+  padding: 1rem;
   margin-top: 1rem;
-  white-space: pre-wrap;
   font-family: monospace;
   font-size: 0.9rem;
-}
-
-.input-base {
-  @apply w-full rounded-md border border-gray-300 dark:border-gray-600 bg-transparent px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 dark:text-gray-900;
-}
-/* -----------------------------------------------------------------
-   🎨 Tailwind utilities ที่ใช้ซ้ำ                             
-------------------------------------------------------------------*/
-
-.card {
-  background-color: var(--color-card);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  transition: background-color 0.3s ease-in-out;
-}
-.form-label.error {
-  color: var(--color-error);
-}
-.csv-preview {
   overflow-x: auto;
+  white-space: pre-wrap;
+}
+.ms-container {
+  position: relative;
+}
+.ms-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   max-width: 100%;
 }
-.button-ghost {
-  background-color: transparent;
-  color: var(--color-primary);
+.ms-caret {
+  margin-left: 0.5rem;
+}
+
+.ms-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 20;
+  background: var(--color-card);
   border: 1px solid var(--color-border);
-}
-
-.button-ghost:hover {
-  background-color: var(--color-bg);
-}
-.btn {
-  @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors;
-}
-.btn-primary {
-  @apply bg-blue-500 text-white hover:bg-blue-600;
-}
-.btn-outline {
-  @apply border border-gray-300 text-gray-700 hover:bg-gray-100;
-}
-/* datatable core */
-.datatable {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-height: 220px;
+  overflow-y: auto;
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
+  padding: 0.5rem;
 }
-
-.datatable th,
-.datatable td {
-  padding: 0.75rem 1rem;
-}
-
-.datatable thead {
-  background: var(--color-bg);
-  text-align: left;
-  font-weight: 600;
-}
-
-.row-alt {
-  background: rgba(0,0,0,0.03); /* แถวสลับสีอ่อน */
-}
-
-/* wrapper & state */
-.table-wrapper { overflow-x: auto; }
-
-.table-loading,
-.table-empty {
+.ms-option {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  padding: 2rem;
-  color: var(--color-text);
+  padding: 0.25rem 0;
 }
 
-.table-loading__spinner {
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 3px solid var(--color-primary);
-  border-top: 3px solid transparent;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+/* =========================================================
+   📱 .form-select — mobile-first (กว้าง 100% ก่อน)
+   ========================================================= */
+.form-select {
+  display: block;
+  width: 100%; /* ไม่ล้นกรอบ */
+  max-width: 100%;
+  min-width: 0; /* kill min-width จากที่อื่น */
+  min-height: 2.75rem; /* แตะง่ายนิ้วโป้ง */
+  padding: 0.75rem 0.875rem;
+  font-size: 0.95rem;
+
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color var(--transition-fast);
+  box-sizing: border-box; /* รวม padding+border ใน width */
 }
 
-@keyframes spin { to { transform: rotate(360deg);} }
-
-/* ปุ่มลบ */
-.btn-delete:hover { color: #ef4444; }
-/* ---------- Table wrapper ---------- */
-.table-wrapper { overflow-x: auto; }
-
-/* สถานะโหลด / ว่าง */
-.table-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  padding: 2rem;
-  color: var(--color-text);
+.form-select:focus {
+  border-color: var(--color-primary);
+  outline: none;
 }
 
-/* spinner ดำเนินการ */
-.spinner {
-  width: 1.25rem; height: 1.25rem;
-  border: 3px solid var(--color-primary);
-  border-top: 3px solid transparent;
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
+/* =========================================================
+   💻 Tablet+ (≥640px) — ค่อยลดความกว้าง
+   ========================================================= */
+@media (min-width: 640px) {
+  .form-select {
+    /* ให้ตามเนื้อข้อความ */
+    min-width: 220px; /* ป้องกันไม่ให้ลีบเกินไป */
+  }
 }
-@keyframes spin { to { transform: rotate(360deg); }}
 
-/* ---------- Datatable ---------- */
-.datatable { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-.datatable th,
-.datatable td { padding: .7rem 1rem; }
+/* ------------- FIX PADDING XS ------------- */
+@media (max-width: 479px) {
+  .container {
+    padding: 1rem;
+  }
+  .form-submit-wrapper {
+    margin-top: 2.5rem;
+  }
+}
 
-.datatable thead {
-  background: var(--color-bg);
-  text-align: left;
+/* ------------- 2-col Grid Tablet+ ------------- */
+@media (min-width: 640px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 2rem;
+  }
+}
+
+/* ------------- Larger Desktop Tweaks ------------- */
+@media (min-width: 1024px) {
+  .form-step-active {
+    column-gap: 3rem;
+  }
+  .form-select,
+  .ms-trigger {
+    min-width: 260px;
+  }
+}
+
+/* ปรับ progress bar ให้เต็มคอนเทนเนอร์เสมอ */
+.progress-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+}
+/* ===============================
+   📋 Summary Grid – mobile-first
+   =============================== */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* มือถือ: 1 คอลัมน์ */
+  gap: 1rem 0.75rem;
+  font-size: 0.925rem;
+  line-height: 1.45;
+}
+
+.summary-term {
   font-weight: 600;
+  white-space: nowrap;
 }
-.row-alt { background: rgba(0,0,0,.04); }
+.summary-desc {
+  margin: 0;
+  word-break: break-word; /* กันล้นแนวนอน */
+}
 
-/* ---------- Icon-only button ---------- */
-.btn-icon {
-  background: transparent;
-  border: none;
-  padding: .25rem;
-  line-height: 1;          /* ให้ไอคอนสูงเท่าปุ่ม */
-  font-size: 1.05rem;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background .15s;
+/* 💻 Desktop (≥1024 px) → 2 คอลัมน์ */
+@media (min-width: 1024px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 3rem;
+  }
 }
-.btn-icon:hover { background: rgba(239,68,68,.15); } /* แดงจาง ๆ */
-.btn-icon:hover { color: #ef4444; }                  /* ไอคอนแดง */
+
+/* (option) ถ้า value ยาวมากให้ครอบด้วย … */
+.summary-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (hover: hover) {
+  .summary-desc:hover {
+    white-space: normal;
+  } /* hover แล้วโชว์เต็ม */
+}
