@@ -1,7 +1,7 @@
 // src/pages/AdminLoginPage.tsx
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { Button } from "../components/Button";
+import { Button } from "../components/ui/Button";
 import { Mail, Lock } from "lucide-react";            // ไอคอนเล็ก ๆ
 
 export default function AdminLoginPage() {

@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { AdminTable, Row } from "@/components/AdminTable";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/ui/Button";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { api } from "@/lib/api";
 

@@ -10,7 +10,8 @@ import AdminDashboardPage from "./pages/AdminDashboardPage.tsx";
 import { AuthProvider } from "./hooks/useAuth.tsx";
 import RequireAdmin from "./components/RequireAdmin";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import { Toaster } from "react-hot-toast";
+import ModelManagerPage from "./pages/ModelManagerPage.tsx";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -18,6 +19,7 @@ const queryClient = new QueryClient({
     },
   },
 });
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -37,6 +39,16 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                   </RequireAdmin>
                 }
               />
+              <Route
+                path="/admin/ModelManager"
+                element={
+                  <RequireAdmin>
+                    <ModelManagerPage />
+                  </RequireAdmin>
+                }
+              />
+
+              <Toaster position="top-right" />
             </Routes>
           </AuthProvider>
         </BrowserRouter>
