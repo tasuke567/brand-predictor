@@ -20,7 +20,6 @@ const queryClient = new QueryClient({
   },
 });
 
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
@@ -47,9 +46,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                   </RequireAdmin>
                 }
               />
-
-              <Toaster position="top-right" />
             </Routes>
+            <Toaster position="top-right" />
           </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>

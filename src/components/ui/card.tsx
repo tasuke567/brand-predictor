@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cn } from "@/lib/utils"          // ฟังก์ชันรวม class (ถ้าไม่มีให้ใช้ clsx หรือสร้างเอง)
+import { cn } from "../../lib/utils"          // ฟังก์ชันรวม class (ถ้าไม่มีให้ใช้ clsx หรือสร้างเอง)
 
 const Card = React.forwardRef<
   HTMLDivElement,
