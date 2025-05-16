@@ -191,7 +191,8 @@ export default function AdminDashboardPage() {
                     data={brandStats}
                     dataKey="total"
                     nameKey="brand"
-                    outerRadius={110}
+                    outerRadius="80%" 
+                    labelLine={false}
                     label={({ payload }) => payload.brand}
                   >
                     {brandStats.map((_, i) => (
@@ -213,15 +214,9 @@ export default function AdminDashboardPage() {
               columns={columns}
               keyField="id"
               loading={rowsLoading}
-      
             />
             {pageCount > 1 && (
-              <Pagination
-                page={page}
-                pageCount={pageCount}
-                setPage={setPage}
-
-              />
+              <Pagination page={page} pageCount={pageCount} setPage={setPage} />
             )}
           </CardContent>
         </Card>
