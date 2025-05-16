@@ -124,14 +124,12 @@ export default function AdminDashboardPage() {
       {/* Topbar */}
       <header className="topbar">
         <h1 className="topbar__title">Admin Dashboard</h1>
-        <div className="flex gap-2">
-          <Button
-            className="btn btn--outline"
-            onClick={() => navigate("/admin/models")}
-          >
+
+        <div className="topbar__actions">
+          <Button size="sm" onClick={() => navigate("/admin/models")}>
             ⚙️ จัดการโมเดล
           </Button>
-          <Button className="btn btn--outline" onClick={() => logout()}>
+          <Button size="sm" variant="outline" onClick={() => logout()}>
             Logout
           </Button>
         </div>
@@ -191,7 +189,7 @@ export default function AdminDashboardPage() {
                     data={brandStats}
                     dataKey="total"
                     nameKey="brand"
-                    outerRadius="80%" 
+                    outerRadius="75%"
                     labelLine={false}
                     label={({ payload }) => payload.brand}
                   >

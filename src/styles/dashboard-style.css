@@ -1,236 +1,352 @@
-
-
 /* ---------- LAYOUT WRAPPERS -------------------------------------------- */
 .page-wrapper {
-max-width: 1280px;
-margin-inline: auto;
-padding-inline: 1rem;
-padding-block: 2rem;
-color: var(--c-text);
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  padding-block: 2rem;
+  color: var(--c-text);
 }
 
 .topbar {
-position: sticky;
-top: 0;
-z-index: 20;
-display: flex;
-flex-wrap: wrap;
-justify-content: space-between;
-align-items: center;
-gap: 1rem;
-padding-block: 0.75rem;
-background: var(--c-bg);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 0.75rem;
+  background: var(--c-bg);
 }
 .topbar__title {
-font-size: 1.5rem;
-font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 /* ---------- CARD -------------------------------------------------------- */
 .card {
-background: var(--c-surface);
-border: 1px solid var(--c-border);
-border-radius: var(--radius);
-box-shadow: var(--shadow-sm);
-transition: box-shadow 160ms;
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 160ms;
 }
 .card:hover {
-box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md);
 }
 .card__content {
-padding: 1.25rem 1.5rem;
+  padding: 1.25rem 1.5rem;
 }
 
 /* ---------- FILTER FORM ------------------------------------------------- */
 .filter-form {
-display: flex;
-flex-wrap: wrap;
-gap: 1rem;
-align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
 }
 .filter-form__group {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 .filter-form label {
-font-size: 0.875rem;
-color: var(--c-text-muted);
-margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--c-text-muted);
+  margin-bottom: 0.25rem;
 }
 .filter-form input[type="date"] {
-border: 1px solid var(--c-border);
-border-radius: var(--radius);
-padding: 0.5rem 0.75rem;
-font-size: 0.875rem;
-background: var(--c-surface);
-color: var(--c-text);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  background: var(--c-surface);
+  color: var(--c-text);
 }
 
 /* ---------- BUTTON (outline style) ------------------------------------- */
 .btn {
-cursor: pointer;
-border-radius: var(--radius);
-font-size: 0.875rem;
-padding: 0.375rem 0.875rem;
-transition: background 160ms, box-shadow 160ms;
+  cursor: pointer;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  padding: 0.375rem 0.875rem;
+  transition: background 160ms, box-shadow 160ms;
 }
 .btn--outline {
-background: var(--c-surface);
-border: 1px solid var(--c-border);
-color: var(--c-text);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  color: var(--c-text);
 }
 .btn--outline:hover {
-background: var(--c-bg);
+  background: var(--c-bg);
 }
 .btn--outline:focus-visible {
-outline: 3px solid var(--c-primary-light);
-outline-offset: 2px;
+  outline: 3px solid var(--c-primary-light);
+  outline-offset: 2px;
 }
 
 /* ---------- CHART CARD -------------------------------------------------- */
 .chart-card {
-width: 100%;
-flex: 1 1 0%;
+  width: 100%;
+  flex: 1 1 0%;
 }
 .chart-card__container {
-width: 100%;
-height: 18rem; /* same as h-72 */
-opacity: 0;
-transition: opacity 240ms ease;
+  width: 100%;
+  height: 18rem; /* same as h-72 */
+  opacity: 0;
+  transition: opacity 240ms ease;
 }
 .chart-card__container.is-ready {
-opacity: 1;
+  opacity: 1;
 }
 
 /* ---------- TABLE ------------------------------------------------------- */
 .admin-table {
-width: 100%;
-border-collapse: collapse;
-font-size: 0.875rem;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
 }
 .admin-table thead {
-background: var(--c-bg);
+  background: var(--c-bg);
 }
 .admin-table th,
 .admin-table td {
-padding: 0.75rem 1rem;
-text-align: left;
+  padding: 0.75rem 1rem;
+  text-align: left;
 }
 .admin-table tbody tr:nth-child(odd) {
-background: var(--c-bg);
+  background: var(--c-bg);
 }
 .admin-table tbody tr:hover {
-background: #eef2ff;
+  background: #eef2ff;
 }
 
 /* ---------- PAGINATION -------------------------------------------------- */
 .pagination {
-display: flex;
-justify-content: center;
-gap: 0.5rem;
-margin-block-start: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-block-start: 1rem;
 }
 .pagination__btn {
-min-width: 2rem;
-height: 2rem;
-border: 1px solid var(--c-border);
-border-radius: var(--radius);
-background: var(--c-surface);
-cursor: pointer;
+  min-width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  background: var(--c-surface);
+  cursor: pointer;
 }
 .pagination__btn[aria-current="page"] {
-background: var(--c-primary);
-border-color: var(--c-primary);
-color: #fff;
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+  color: #fff;
 }
 
 /* ---------- UTILITY ----------------------------------------------------- */
-.text-center { text-align: center; }
-.text-sm     { font-size: 0.875rem; }
-.text-muted  { color: var(--c-text-muted); }
+.text-center {
+  text-align: center;
+}
+.text-sm {
+  font-size: 0.875rem;
+}
+.text-muted {
+  color: var(--c-text-muted);
+}
 
 /* ---------- SKELETON (optional) ---------------------------------------- */
 @keyframes pulse {
-0% { opacity: 0.4; }
-50% { opacity: 0.9; }
-100% { opacity: 0.4; }
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.4;
+  }
 }
 .skeleton {
-background: var(--c-border);
-animation: pulse 1.5s infinite;
-border-radius: var(--radius);
+  background: var(--c-border);
+  animation: pulse 1.5s infinite;
+  border-radius: var(--radius);
 }
 
 /* =====================================================
    🌐 DASHBOARD GRID (mobile-first)
    ===================================================== */
-.dashboard-grid{
-  display:grid;          /* mobile = stack */
-  gap:2rem;
+.dashboard-grid {
+  display: grid; /* mobile = stack */
+  gap: 2rem;
 }
 
 /* ≥1024px – chart | table */
-@media (min-width:1024px){
-  .dashboard-grid{
-    grid-template-columns:400px 1fr;
-    align-items:start;
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 400px 1fr;
+    align-items: start;
   }
 }
 
 /* ≥1440px – chart กว้างขึ้น */
-@media (min-width:1440px){
-  .dashboard-grid{ grid-template-columns:480px 1fr; }
+@media (min-width: 1440px) {
+  .dashboard-grid {
+    grid-template-columns: 480px 1fr;
+  }
 }
 
 /* =====================================================
    📈  CHART CARD
    ===================================================== */
-.card.chart-card{
-  width:100%;
-  overflow:visible;      /* ให้ label โผล่ได้ */
-  box-shadow:var(--shadow-md);
+.card.chart-card {
+  width: 100%;
+  overflow: visible; /* ให้ label โผล่ได้ */
+  box-shadow: var(--shadow-md);
 }
-html, body { overflow-x: hidden; }
+html,
+body {
+  overflow-x: hidden;
+}
 /* ---------- container ของ <ResponsiveContainer> ---------- */
-.chart-card__container{
-  width:100%;
-  max-width:100%;        /* มือถือเต็มจอ */
-  aspect-ratio:1/1;      /* วงกลมสมส่วน */
-  margin-inline:0;       /* mobile ไม่ต้อง center */
-  max-width: 100vw;      /* ห้ามเกิน viewport */
+.chart-card__container {
+  width: 100%;
+  max-width: 100%; /* มือถือเต็มจอ */
+  aspect-ratio: 1/1; /* วงกลมสมส่วน */
+  margin-inline: 0; /* mobile ไม่ต้อง center */
+  max-width: 100vw; /* ห้ามเกิน viewport */
   padding-inline: 0.75rem; /* กัน label ชนขอบ */
-  box-sizing: border-box;  /* รวม padding เข้า width */
+  box-sizing: border-box; /* รวม padding เข้า width */
 }
 /* 3️⃣  มือถือ (<480px) ใช้ flex ไม่ใช้ grid */
 @media (max-width: 479px) {
   .dashboard-grid {
-    display: flex;        /* stack ธรรมดา */
+    display: flex; /* stack ธรรมดา */
     flex-direction: column;
     gap: 2rem;
   }
 }
 
 /* ≥480px – ขยายทีละขั้น */
-@media (min-width:480px){
-  .chart-card__container{
-    max-width:360px;
-    margin-inline:auto;
+@media (min-width: 480px) {
+  .chart-card__container {
+    max-width: 360px;
+    margin-inline: auto;
   }
 }
-@media (min-width:640px){
-  .chart-card__container{ max-width:420px; }
+@media (min-width: 640px) {
+  .chart-card__container {
+    max-width: 420px;
+  }
 }
 
 /* ≥1024px – ใช้คอลัมน์ 400px + สูงคงที่ */
-@media (min-width:1024px){
-  .chart-card__container{
-    max-width:none;      /* ยืดเต็มคอลัมน์ */
-    height:360px;
-    aspect-ratio:auto;   /* ปิด ratio */
+@media (min-width: 1024px) {
+  .chart-card__container {
+    max-width: none; /* ยืดเต็มคอลัมน์ */
+    height: 360px;
+    aspect-ratio: auto; /* ปิด ratio */
   }
 }
 
 /* ≥1440px – สูง 480px */
-@media (min-width:1440px){
-  .chart-card__container{ height:480px; }
+@media (min-width: 1440px) {
+  .chart-card__container {
+    height: 480px;
+  }
 }
+/* ────────────────────────────────────────────────
+   1) TOPBAR ACTIONS
+   ────────────────────────────────────────────────*/
+.topbar__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap; /* จอแคบแล้วจะขึ้นบรรทัดใหม่ */
+}
+
+/* ปุ่มเล็กลงนิดสำหรับมือถือ */
+@media (max-width: 479px) {
+  .topbar__actions .btn {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ────────────────────────────────────────────────
+   2) FILTER BAR (ใช้คลาสที่มีอยู่ .filter-form)
+   ────────────────────────────────────────────────*/
+.filter-form {
+  display: grid;
+  gap: 1rem;
+  margin-block: 1.25rem 2rem; /* top 20px, bottom 32px */
+}
+
+/* • มือถือ (default) – Stack 4 แถว
+   • ≥640px – จัด 4 คอลัมน์ auto-fit; ปุ่มยืดเต็ม cell */
+@media (min-width: 640px) {
+  .filter-form {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    align-items: end; /* label ชิดบรรทัดล่าง */
+    gap: 1rem 1.5rem;
+  }
+  .filter-form .btn {
+    width: 100%;
+  }
+}
+
+/* • ≥1024px – ขยายระยะห่างให้อ่านสบาย */
+@media (min-width: 1024px) {
+  .filter-form {
+    gap: 1.25rem 2rem;
+  }
+}
+
+/* ────────────────────────────────────────────────
+   3) DATE INPUT (ให้ดูเสมอกันทุกเบราว์เซอร์)
+   ────────────────────────────────────────────────*/
+.filter-form input[type="date"] {
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  background: var(--c-surface);
+  color: var(--c-text);
+}
+
+/* ────────────────────────────────────────────────
+   4) TABLE – ให้ตารางไม่ล้นข้างซ้ายในมือถือ
+   ────────────────────────────────────────────────*/
+@media (max-width: 639px) {
+  .admin-table {
+    font-size: 0.8125rem;
+  } /* ย่อ text นิด */
+  .dashboard-grid .card:last-child {
+    overflow-x: auto;
+    scrollbar-gutter: stable;
+  }
+}
+
+/* ────────────────────────────────────────────────
+   5) PAGE WRAPPER – ลด padding มุมจอแคบ
+   ────────────────────────────────────────────────*/
+.page-wrapper {
+  padding-inline: clamp(0.5rem, 4vw, 1rem);
+}
+/* 1) baseline filter (≥640px) */
+@media (min-width:640px){
+  .filter-form{ align-items:end; }
+}
+
+/* 2) margin action iPhone */
+@media (max-width:480px){
+  .topbar__actions{ margin-top:.5rem; }
+}
+
+
+
+/* 4) stable scrollbar */
+.dashboard-grid .card:last-child{ scrollbar-gutter:stable; }
+
+/* 5) btn nowrap */
+.btn{ white-space:nowrap; }
