@@ -79,8 +79,9 @@ const App = () => {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      import.meta.env.VITE_API_URL ||
-        "https://waka-api-hw3h.onrender.com" + "/predict",
+      `${
+        import.meta.env.VITE_API_URL ?? "https://waka-api-hw3h.onrender.com"
+      }/predict`,
       true
     );
 
@@ -158,109 +159,114 @@ const App = () => {
   const currentSection = sections[step];
 
   return (
-    
-      <div className="container">
-        <Layout>
-      {/* Loading overlay with real % */}
-      {isUploading && (
-        <div className="loading-overlay">
-          {processing ? (
-            <>
-              <p className="loading-text">กำลังประมวลผล...</p>
-            </>
-          ) : (
-            <>
-              <div className="loader-bar">
-                <div
-                  className="loader-fill"
-                  style={{ width: `${uploadPercent}%` }}
-                />
-              </div>
-              <p className="loading-text">อัปโหลด {uploadPercent}%</p>
-            </>
-          )}
-        </div>
-      )}
-
-      <div className="progress-wrapper">
-        <div className="progress-bar" style={{ width: `${progress}%` }}></div>
-      </div>
-
-      <form onSubmit={handleSubmit} className="form">
-        {currentSection.fields.length ? (
-          <div className="form-step-active fade-in fade-transition">
-            <div className="form-section-title">{currentSection.title}</div>
-            <div className="form-grid">
-              {currentSection.fields.map((field) => (
-                <FieldGroup
-                  key={field}
-                  label={labels[field as FormKey]}
-                  name={field as FormKey}
-                  multiple={Array.isArray(initialState[field as FormKey])}
-                  value={formData[field as FormKey]}
-                  error={errors[field as FormKey]}
-                  onChange={handleChange}
-                  options={options[field as FormKey]}
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="summary-section fade-in">
-            <h2 className="form-section-title">{currentSection.title}</h2>
-
-            {/* ⬇️ เปลี่ยน div-list → definition list */}
-            <dl className="summary-grid">
-              {(Object.keys(labels) as FormKey[]).map((k) => (
-                <React.Fragment key={k}>
-                  <dt className="summary-term">{labels[k]}</dt>
-                  <dd className="summary-desc">
-                    {Array.isArray(formData[k])
-                      ? (formData[k] as string[]).join(", ")
-                      : formData[k] || "-"}
-                  </dd>
-                </React.Fragment>
-              ))}
-            </dl>
+    <div className="container">
+      <Layout>
+        {/* Loading overlay with real % */}
+        {isUploading && (
+          <div className="loading-overlay">
+            {processing ? (
+              <>
+                <p className="loading-text">กำลังประมวลผล...</p>
+              </>
+            ) : (
+              <>
+                <div className="loader-bar">
+                  <div
+                    className="loader-fill"
+                    style={{ width: `${uploadPercent}%` }}
+                  />
+                </div>
+                <p className="loading-text">อัปโหลด {uploadPercent}%</p>
+              </>
+            )}
           </div>
         )}
 
-        <div className="form-submit-wrapper">
-          {step > 0 && (
-            <button type="button" onClick={handleBack} className="step-button">
-              ย้อนกลับ
-            </button>
-          )}
-          {step < sections.length - 1 && (
-            <button type="button" onClick={handleNext} className="step-button">
-              ถัดไป
-            </button>
-          )}
-          {step === sections.length - 1 && (
-            <button
-              type="submit"
-              className="submit-button"
-              disabled={isUploading}
-            >
-              {processing
-                ? "กำลังประมวลผล..."
-                : isUploading
-                ? `อัปโหลด ${uploadPercent}%`
-                : "พยากรณ์สมาร์ตโฟนที่เหมาะกับคุณ"}
-            </button>
-          )}
+        <div className="progress-wrapper">
+          <div className="progress-bar" style={{ width: `${progress}%` }}></div>
         </div>
-      </form>
 
-      {showToast && <div className="toast">กรุณากรอกข้อมูลให้ครบถ้วน</div>}
+        <form onSubmit={handleSubmit} className="form">
+          {currentSection.fields.length ? (
+            <div className="form-step-active fade-in fade-transition">
+              <div className="form-section-title">{currentSection.title}</div>
+              <div className="form-grid">
+                {currentSection.fields.map((field) => (
+                  <FieldGroup
+                    key={field}
+                    label={labels[field as FormKey]}
+                    name={field as FormKey}
+                    multiple={Array.isArray(initialState[field as FormKey])}
+                    value={formData[field as FormKey]}
+                    error={errors[field as FormKey]}
+                    onChange={handleChange}
+                    options={options[field as FormKey]}
+                  />
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="summary-section fade-in">
+              <h2 className="form-section-title">{currentSection.title}</h2>
 
-      <div className="toggle-dark" onClick={() => setDark(!dark)}>
-        {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
-      </div>
+              {/* ⬇️ เปลี่ยน div-list → definition list */}
+              <dl className="summary-grid">
+                {(Object.keys(labels) as FormKey[]).map((k) => (
+                  <React.Fragment key={k}>
+                    <dt className="summary-term">{labels[k]}</dt>
+                    <dd className="summary-desc">
+                      {Array.isArray(formData[k])
+                        ? (formData[k] as string[]).join(", ")
+                        : formData[k] || "-"}
+                    </dd>
+                  </React.Fragment>
+                ))}
+              </dl>
+            </div>
+          )}
+
+          <div className="form-submit-wrapper">
+            {step > 0 && (
+              <button
+                type="button"
+                onClick={handleBack}
+                className="step-button"
+              >
+                ย้อนกลับ
+              </button>
+            )}
+            {step < sections.length - 1 && (
+              <button
+                type="button"
+                onClick={handleNext}
+                className="step-button"
+              >
+                ถัดไป
+              </button>
+            )}
+            {step === sections.length - 1 && (
+              <button
+                type="submit"
+                className="submit-button"
+                disabled={isUploading}
+              >
+                {processing
+                  ? "กำลังประมวลผล..."
+                  : isUploading
+                  ? `อัปโหลด ${uploadPercent}%`
+                  : "พยากรณ์สมาร์ตโฟนที่เหมาะกับคุณ"}
+              </button>
+            )}
+          </div>
+        </form>
+
+        {showToast && <div className="toast">กรุณากรอกข้อมูลให้ครบถ้วน</div>}
+
+        <div className="toggle-dark" onClick={() => setDark(!dark)}>
+          {dark ? "☀️ Light Mode" : "🌙 Dark Mode"}
+        </div>
       </Layout>
     </div>
-    
-    
   );
 };
 
