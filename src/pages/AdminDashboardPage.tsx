@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -131,7 +131,7 @@ export default function AdminDashboardPage() {
           >
             ⚙️ จัดการโมเดล
           </Button>
-          <Button className="btn btn--outline" onClick={logout}>
+          <Button className="btn btn--outline" onClick={() => logout()}>
             Logout
           </Button>
         </div>
@@ -213,14 +213,14 @@ export default function AdminDashboardPage() {
               columns={columns}
               keyField="id"
               loading={rowsLoading}
-              className="admin-table"
+      
             />
             {pageCount > 1 && (
               <Pagination
                 page={page}
                 pageCount={pageCount}
                 setPage={setPage}
-                className="pagination"
+
               />
             )}
           </CardContent>
