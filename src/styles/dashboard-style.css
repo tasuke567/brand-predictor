@@ -171,3 +171,22 @@ border-radius: var(--radius);
   }
 }
 .chart-card { box-shadow: var(--shadow-md); }
+/* chart card open up */
+.card.chart-card{
+  overflow: visible;      /* ให้ label โผล่นอกได้ */
+}
+.chart-card__container{
+  width: 100%;
+  max-width: 380px;       /* วงไม่ลีบเกิน */
+  height: 360px;          /* h-72 ≈ 288 เล็กเกิน desktop */
+  margin-inline: auto;    /* จัดกลางคอลัมน์ */
+}
+
+/* layout grid—desktop */
+@media (min-width:1024px){
+  .dashboard-grid{
+    display: grid;
+    grid-template-columns: 400px 1fr;   /* chart | table */
+    gap: 2.5rem;
+  }
+}
