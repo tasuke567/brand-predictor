@@ -8,7 +8,7 @@ import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatBytes } from "@/utils/formatBytes";
-
+import "../styles/model-manager.css";
 type Metrics = { accuracy: number | null; kappa: number | null };
 interface ModelInfo {
   updatedAt: string;
@@ -76,71 +76,88 @@ export default function ModelManagerPage() {
   });
 
   return (
-    <Card className="max-w-xl mx-auto">
-      <CardContent className="space-y-6">
-        {/* Upload model */}
-        <section className="space-y-2">
-          <h3 className="font-semibold">📦 Hot-swap Model</h3>
-          <input ref={modelFile} type="file" accept=".model" />
-          <Button
-            size="sm"
-            disabled={uploadMut.isPending}
-            onClick={() => uploadMut.mutate()}
-          >
-            {uploadMut.isPending ? "Uploading…" : "Upload / Replace"}
-          </Button>
-        </section>
-
-        {/* Train */}
-        <section className="space-y-2 border-t pt-4">
-          <h3 className="font-semibold">🛠️ Train New Model</h3>
-          <input ref={trainFile} type="file" accept=".csv,.arff" />
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={trainMut.isPending}
-            onClick={() => trainMut.mutate()}
-          >
-            {trainMut.isPending ? "Training…" : "Train & Replace"}
-          </Button>
-        </section>
-
-        {/* Current model info */}
-        {info?.updatedAt && (
-          <section className="space-y-1 border-t pt-4 text-sm">
-            <h4 className="font-semibold mb-1">📑 Current model</h4>
-            <p>Last updated: {(dayjs(info.updatedAt) as any).fromNow()}</p>
-            <p>Size: <strong>{formatBytes(info.size)}</strong></p>
-            <p>
-              Class: <code>{info.classAttr}</code>
-            </p>
-            {info.metrics && (
-              <p>
-                Accuracy:{" "}
-                <strong>
-                  {info.metrics.accuracy !== null
-                    ? `${(info.metrics.accuracy * 100).toFixed(2)} %`
-                    : "–"}
-                </strong>{" "}
-                | κ:{" "}
-                <strong>
-                  {info.metrics.kappa !== null
-                    ? info.metrics.kappa.toFixed(3)
-                    : "–"}
-                </strong>
-              </p>
-            )}
+    <div className="model-manager">
+      <Card className="model-card">
+        <CardContent className="mm-grid">
+          {/* Upload model */}
+          <section className="mm-section">
+            <h3 className="font-semibold">📦 Hot-swap Model</h3>
+            <input
+              ref={modelFile}
+              className="mm-file"
+              type="file"
+              accept=".model"
+            />
             <Button
-              variant="solid"
+              className="mm-btn"
               size="sm"
-              disabled={delMut.isPending}
-              onClick={() => delMut.mutate()}
+              disabled={uploadMut.isPending}
+              onClick={() => uploadMut.mutate()}
             >
-              {delMut.isPending ? "Deleting…" : "Delete"}
+              {uploadMut.isPending ? "Uploading…" : "Upload / Replace"}
             </Button>
           </section>
-        )}
-      </CardContent>
-    </Card>
+
+          {/* Train */}
+          <section className="mm-section">
+            <h3 className="font-semibold">🛠️ Train New Model</h3>
+            <input
+              ref={trainFile}
+              className="mm-file"
+              type="file"
+              accept=".csv,.arff"
+            />
+            <Button
+              className="mm-btn"
+              variant="outline"
+              size="sm"
+              disabled={trainMut.isPending}
+              onClick={() => trainMut.mutate()}
+            >
+              {trainMut.isPending ? "Training…" : "Train & Replace"}
+            </Button>
+          </section>
+
+          {/* Current model info */}
+          {info?.updatedAt && (
+            <section className="mm-section mm-meta">
+              <h4 className="font-semibold mb-1">📑 Current model</h4>
+              <p>Last updated: {(dayjs(info.updatedAt) as any).fromNow()}</p>
+              <p>
+                Size: <strong>{formatBytes(info.size)}</strong>
+              </p>
+              <p>
+                Class: <code>{info.classAttr}</code>
+              </p>
+              {info.metrics && (
+                <p>
+                  Accuracy:{" "}
+                  <strong>
+                    {info.metrics.accuracy !== null
+                      ? `${(info.metrics.accuracy * 100).toFixed(2)} %`
+                      : "–"}
+                  </strong>{" "}
+                  | κ:{" "}
+                  <strong>
+                    {info.metrics.kappa !== null
+                      ? info.metrics.kappa.toFixed(3)
+                      : "–"}
+                  </strong>
+                </p>
+              )}
+              <Button
+                className="mm-btn"
+                variant="solid"
+                size="sm"
+                disabled={delMut.isPending}
+                onClick={() => delMut.mutate()}
+              >
+                {delMut.isPending ? "Deleting…" : "Delete"}
+              </Button>
+            </section>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
