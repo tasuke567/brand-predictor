@@ -1,41 +1,146 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime.js";
+dayjs.extend(relativeTime);
+import { api } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/card";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
-import axios from "axios";
+import { formatBytes } from "@/utils/formatBytes";
 
-const ModelManagerPage = () => {
-  const [info,setInfo]=useState<any>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+type Metrics = { accuracy: number | null; kappa: number | null };
+interface ModelInfo {
+  updatedAt: string;
+  size: number;
+  classAttr: string;
+  metrics?: Metrics;
+}
 
-  const fetchInfo = async ()=> setInfo((await axios.get("/admin/model")).data);
-  const upload   = async ()=> {
-    const f = fileRef.current!.files?.[0]; if(!f) return;
-    const fd = new FormData(); fd.append("file",f);
-    await axios.post("/admin/model",fd, {headers:{'Content-Type':'multipart/form-data'}});
-    toast.success("Model hot-swapped 🚀"); fetchInfo();
-  };
-  const remove = async ()=>{ await axios.delete("/admin/model"); toast("Model nuked 👋"); setInfo(null); };
+/* ---------------- react-query fetch ---------------- */
+const useModelInfo = () =>
+  useQuery({
+    queryKey: ["model-info"],
+    queryFn: () => api.get<ModelInfo>("/model-info").then((r) => r.data),
+    retry: false,
+  });
 
-  useEffect(()=>{ fetchInfo().catch(()=>{}); },[]);
+export default function ModelManagerPage() {
+  const qc = useQueryClient();
+  const modelFile = useRef<HTMLInputElement>(null);
+  const trainFile = useRef<HTMLInputElement>(null);
+
+  const { data: info } = useModelInfo();
+
+  /* ---------------- upload ---------------- */
+  const uploadMut = useMutation({
+    mutationFn: async () => {
+      const f = modelFile.current?.files?.[0];
+      if (!f || !f.name.endsWith(".model"))
+        throw new Error("เลือกไฟล์ .model ก่อนนะ");
+      const fd = new FormData();
+      fd.append("file", f);
+      await api.post("/admin/model", fd);
+    },
+    onSuccess: () => {
+      toast.success("โมเดลอัพเดตแล้ว 🚀");
+      qc.invalidateQueries({ queryKey: ["model-info"] });
+    },
+    onError: (e) => toast.error((e as Error).message),
+  });
+
+  /* ---------------- train ---------------- */
+  const trainMut = useMutation({
+    mutationFn: async () => {
+      const f = trainFile.current?.files?.[0];
+      if (!f) throw new Error("เลือกไฟล์ dataset ก่อนนะ");
+      const fd = new FormData();
+      fd.append("file", f);
+      await api.post("/train", fd);
+    },
+    onSuccess: () => {
+      toast.success("Train เสร็จเรียบร้อย 🎉");
+      qc.invalidateQueries({ queryKey: ["model-info"] });
+    },
+    onError: (e) => toast.error((e as Error).message),
+  });
+
+  /* ---------------- delete ---------------- */
+  const delMut = useMutation({
+    mutationFn: () => api.delete("/admin/model"),
+    onSuccess: () => {
+      toast("ลบโมเดลแล้ว 👋");
+      qc.invalidateQueries({ queryKey: ["model-info"] });
+    },
+    onError: () => toast.error("ลบไม่สำเร็จ"),
+  });
+
   return (
-    <Card className="max-w-lg mx-auto">
-      <CardContent className="space-y-4">
-        <input ref={fileRef} type="file" accept=".model" className="block" />
-        <Button onClick={upload}>Upload / Replace</Button>
-        {info && (
-          <>
-            <p>Last updated: {dayjs(info.updatedAt).fromNow()}</p>
-            <p>Size: {(info.size/1024).toFixed(1)} KB</p>
-            <p>Class: {info.classAttr}</p>
-            <Button variant="solid" onClick={remove}>Delete</Button>
-          </>
+    <Card className="max-w-xl mx-auto">
+      <CardContent className="space-y-6">
+        {/* Upload model */}
+        <section className="space-y-2">
+          <h3 className="font-semibold">📦 Hot-swap Model</h3>
+          <input ref={modelFile} type="file" accept=".model" />
+          <Button
+            size="sm"
+            disabled={uploadMut.isPending}
+            onClick={() => uploadMut.mutate()}
+          >
+            {uploadMut.isPending ? "Uploading…" : "Upload / Replace"}
+          </Button>
+        </section>
+
+        {/* Train */}
+        <section className="space-y-2 border-t pt-4">
+          <h3 className="font-semibold">🛠️ Train New Model</h3>
+          <input ref={trainFile} type="file" accept=".csv,.arff" />
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={trainMut.isPending}
+            onClick={() => trainMut.mutate()}
+          >
+            {trainMut.isPending ? "Training…" : "Train & Replace"}
+          </Button>
+        </section>
+
+        {/* Current model info */}
+        {info?.updatedAt && (
+          <section className="space-y-1 border-t pt-4 text-sm">
+            <h4 className="font-semibold mb-1">📑 Current model</h4>
+            <p>Last updated: {(dayjs(info.updatedAt) as any).fromNow()}</p>
+            <p>Size: <strong>{formatBytes(info.size)}</strong></p>
+            <p>
+              Class: <code>{info.classAttr}</code>
+            </p>
+            {info.metrics && (
+              <p>
+                Accuracy:{" "}
+                <strong>
+                  {info.metrics.accuracy !== null
+                    ? `${(info.metrics.accuracy * 100).toFixed(2)} %`
+                    : "–"}
+                </strong>{" "}
+                | κ:{" "}
+                <strong>
+                  {info.metrics.kappa !== null
+                    ? info.metrics.kappa.toFixed(3)
+                    : "–"}
+                </strong>
+              </p>
+            )}
+            <Button
+              variant="solid"
+              size="sm"
+              disabled={delMut.isPending}
+              onClick={() => delMut.mutate()}
+            >
+              {delMut.isPending ? "Deleting…" : "Delete"}
+            </Button>
+          </section>
         )}
       </CardContent>
     </Card>
   );
-};
-export default ModelManagerPage;
+}

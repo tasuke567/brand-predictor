@@ -18,13 +18,14 @@ export const AdminTable = <T,>({
   loading?: boolean;
   keyField: keyof T;
 }) => (
-  <table className="admin-table">
+  <div className="admin-table__wrap">
+    <table className="admin-table">
     <thead className="bg-muted">
       <tr>
         {columns.map((c) => (
           <th
             key={c.header}
-            className={c.hideOnMobile ? "hide-mobile" : "px-4 py-2"}
+            className={c.hideOnMobile ? "hide-mobile" : "hide-md"}
           >
             {c.header}
           </th>
@@ -62,5 +63,7 @@ export const AdminTable = <T,>({
       )}
     </tbody>
   </table>
+  </div>
+  
 );
 export default AdminTable;

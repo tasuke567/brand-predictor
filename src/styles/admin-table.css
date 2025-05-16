@@ -1,31 +1,41 @@
-/* admin-table.css */
+/* =========================================================
+   📊 ADMIN TABLE  –  MOBILE-FIRST
+   ========================================================= */
 
-/* ---------- Table wrapper ---------- */
-.admin-table {
+/* ----- Wrapper: ทำให้ลากได้เวลาจอกว้างไม่พอ ----- */
+.admin-table__wrap {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;              /* text-sm */
+  overflow-x: auto;          /* 🔹 drag ในมือถือ */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* ---------- Header row ---------- */
+/* ----- Table base ----- */
+.admin-table {
+  width: 100%;
+  min-width: 640px;          /* กันหัวตารางทับกันเกินไป */
+  border-collapse: collapse;
+  font-size: 0.875rem;       /* text-sm */
+}
+
+/* ----- Thead ----- */
 .admin-table thead {
-  background: var(--color-muted, #f3f4f6);  /* bg-muted */
+  background: var(--color-muted, #f3f4f6);
   text-align: left;
   font-weight: 600;
 }
 
 .admin-table th,
 .admin-table td {
-  padding: 0.5rem 1rem;            /* px-4 py-2 */
+  padding: 0.5rem 1rem;      /* px-4 py-2 */
   white-space: nowrap;
 }
 
-/* ---------- Zebra striping ---------- */
+/* ----- Zebra striping ----- */
 .admin-table tbody tr:nth-child(odd) {
-  background: rgba(0, 0, 0, 0.04); /* odd:bg-muted/40 */
+  background: rgba(0, 0, 0, 0.04);   /* odd:bg-muted/40 */
 }
 
-/* ---------- Loading & empty states ---------- */
+/* ----- Loading & Empty states ----- */
 .admin-table__state {
   padding: 1rem;
   text-align: center;
@@ -33,15 +43,29 @@
   color: var(--color-muted-foreground, #6b7280);
 }
 
-/* ---------- Hide columns on mobile ---------- */
-@media (max-width: 767px) {
-  .hide-mobile {                     /* เพิ่ม class นี้บน th/td ที่ต้องซ่อน */
-    display: none;
-  }
+/* =========================================================
+   📱 ≤ 640 px  (SM) – ลดขนาด / ซ่อนคอลัมน์
+   ========================================================= */
+@media (max-width: 640px) {
+  .admin-table       { font-size: 0.8125rem; }   /* text-xs+ */
+  .admin-table th,
+  .admin-table td    { padding: 0.45rem 0.75rem; }
+
+  /* ซ่อนคอลัมน์ที่ติด class .hide-sm */
+  .hide-sm           { display: none; }
 }
 
-/* ---------- Dark-mode tweak (optional) ---------- */
-.dark .admin-table thead {
-  background: #334155;              /* เข้มขึ้นใน dark */
+/* =========================================================
+   💻 ≥ 768 px  (MD) – ยังซ่อน .hide-sm แต่ให้ .hide-md ปิดด้วย
+   ========================================================= */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .hide-md           { display: none; }
+}
+
+/* =========================================================
+   🖥 Dark mode
+   ========================================================= */
+body.dark .admin-table thead {
+  background: #334155;
   color: #f3f4f6;
 }
