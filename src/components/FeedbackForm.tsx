@@ -47,15 +47,13 @@ const FeedbackForm = ({ prediction }: FeedbackFormProps) => {
     setSubmitting(true);
     try {
       await axios.post(
-        import.meta.env.VITE_API_URL || "https://waka-api-hw3h.onrender.com" + "/feedback",
-        {
-          prediction,
-          uiEase,
-          satisfaction,
-          clarity,
-        },
+        `${
+          import.meta.env.VITE_API_URL ?? "https://waka-api-hw3h.onrender.com"
+        }/feedback`,
+        { prediction, uiEase, satisfaction, clarity },
         { headers: { "Content-Type": "application/json" } }
       );
+
       setDone(true);
     } catch (e) {
       alert("ส่งแบบสอบถามไม่สำเร็จ ลองใหม่อีกทีนะ 😢");
