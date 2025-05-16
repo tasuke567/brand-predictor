@@ -4,7 +4,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="layout">
       <header className="header">
-        <h1>📱 พยากรณ์สมาร์ตโฟนที่เหมาะกับคุณ</h1>
+        <h3>📱 พยากรณ์สมาร์ตโฟนที่เหมาะกับคุณ</h3>
       </header>
 
       <main className="main-content">{children}</main>

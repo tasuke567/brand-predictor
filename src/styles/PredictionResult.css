@@ -2,10 +2,10 @@
    📊 RESULT CARD – MOBILE-FIRST
    ========================================================= */
 .result-card{
-  width:100%;max-width:960px;margin:1.5rem auto;padding:1rem;
+  width:100%;max-width:960px;margin:1.5rem auto;padding:.1rem;
   background:var(--color-card);color:var(--color-text);
   border-radius:1.5rem;box-shadow:0 10px 30px rgb(0 0 0/.08);
-  display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem;
+  display:flex;flex-direction:column;align-items:center;text-align:center;;
 }
 
 .result-title{font-size:1.5rem;font-weight:700;margin-bottom:.75rem}
@@ -37,7 +37,7 @@
 
 /* ---------- TABLET (≥640px) ---------- */
 @media(min-width:640px){
-  .result-card{margin:2.5rem auto;padding:2rem 1.5rem;gap:1.5rem}
+  .result-card{margin:.5rem auto;padding:rem 1.5rem;}
   .result-title{font-size:2rem}
   .result-label{font-size:1.8rem}
   .brand-logo{width:140px}
@@ -49,7 +49,7 @@
     display:flex;                 /* เปลี่ยนกลับเป็น flex */
     flex-direction:column;
     align-items:center;
-    gap:2rem;
+
   }
 }
 
