@@ -1,11 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
-
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -16,21 +14,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { api, DashboardRow } from "@/lib/api";
 
 import "../styles/dashboard-style.css";
+dayjs.extend(relativeTime);
 
-/* ------------------------------------------------------------------ */
-/* 🔑  query-key helpers                                              */
-/* ------------------------------------------------------------------ */
+/* 🔑 query-keys */
 const rowsKey = (f: string, t: string) => ["ADMIN", "rows", f, t] as const;
 const brandKey = (f: string, t: string) => ["ADMIN", "brands", f, t] as const;
 
-/* ------------------------------------------------------------------ */
-/* 📦  Page component                                                 */
-/* ------------------------------------------------------------------ */
 export default function AdminDashboardPage() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  /* ---------------- 🔍 filter (default = 7 วันล่าสุด) ------------- */
+  /* 🗓 default = 7 ล่าสุด */
   const todayObj = new Date();
   const today = todayObj.toISOString().split("T")[0];
   const lastWeek = new Date(todayObj.getTime() - 6 * 86_400_000)
@@ -39,12 +30,13 @@ export default function AdminDashboardPage() {
 
   const [dateFrom, setDateFrom] = useState(lastWeek);
   const [dateTo, setDateTo] = useState(today);
-
-  /* ---------------- 📑 pagination --------------------------------- */
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  /* ---------------- 📂 rows --------------------------------------- */
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  /* ── rows ───────────────────────────────────── */
   const {
     data: rows = [],
     isPending: rowsLoading,
@@ -52,23 +44,23 @@ export default function AdminDashboardPage() {
   } = useQuery<DashboardRow[]>({
     queryKey: rowsKey(dateFrom, dateTo),
     queryFn: async () => {
-      const { data } = await api.get<any[]>("/admin/questionnaire", {
+      const { data } = await api.get("/admin/questionnaire", {
         params: { from: dateFrom, to: dateTo },
       });
-      return data.map<DashboardRow>((q) => ({
+      return data.map((q: any) => ({
         id: q.id,
         brand: q.prediction?.label ?? "-",
         createdAt: q.createdAt,
         user: q.user,
       }));
     },
-    staleTime: 0,
-    gcTime: 0,
   });
 
-  /* ---------------- 📊 brand stats (pie chart) -------------------- */
-  type BrandStat = { brand: string; total: number };
-
+  /* ── chart ──────────────────────────────────── */
+  interface BrandStat {
+    brand: string;
+    total: number;
+  }
   const {
     data: brandStats = [],
     isPending: brandLoading,
@@ -76,14 +68,14 @@ export default function AdminDashboardPage() {
   } = useQuery<BrandStat[]>({
     queryKey: brandKey(dateFrom, dateTo),
     queryFn: async () => {
-      const { data } = await api.get<BrandStat[]>("/stats/brands", {});
+      const { data } = await api.get("/stats/brands", {
+        params: { from: dateFrom, to: dateTo },
+      });
       return data;
     },
-    staleTime: 0,
-    gcTime: 0,
   });
 
-  /* ---------------- 🧮 columns + paging --------------------------- */
+  /* ── table helpers ──────────────────────────── */
   const columns: Column<DashboardRow>[] = [
     { header: "ID", cell: (r) => r.id },
     { header: "Brand", cell: (r) => r.brand },
@@ -94,29 +86,24 @@ export default function AdminDashboardPage() {
     },
     { header: "User", cell: (r) => r.user ?? "-" },
   ];
-
   const pagedRows = useMemo(() => {
     const start = (page - 1) * pageSize;
     return rows.slice(start, start + pageSize);
   }, [rows, page]);
-
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
 
-  /* ---------------- 🎨 pie chart helpers -------------------------- */
+  /* ── misc ───────────────────────────────────── */
   const colors = ["#4f46e5", "#f97316", "#10b981", "#ec4899", "#14b8a6"];
-
-  /* ---------------- 🔧 handlers ---------------------------------- */
-  const handleDate =
+  const dateHandler =
     (setter: typeof setDateFrom) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setter(e.target.value);
       setPage(1);
     };
 
-  /** ⬇️ export CSV */
   const downloadReport = async () => {
     try {
-      const { data } = await api.get<Blob>("/admin/report/export", {
+      const { data } = await api.get("/admin/report/export", {
         responseType: "blob",
         params: { from: dateFrom, to: dateTo },
       });
@@ -131,56 +118,48 @@ export default function AdminDashboardPage() {
     }
   };
 
-  /* ---------------- 🖼️  UI --------------------------------------- */
+  /* ── UI ─────────────────────────────────────── */
   return (
-    <div className="page-wrapper space-y-6">
-      {/* ── Topbar ─────────────────────────────────────────── */}
-      <header className="topbar flex justify-between items-center">
-        <h1 className="text-xl font-semibold">Admin Dashboard</h1>
-
-        <div className="flex flex-wrap gap-2">
+    <div className="page-wrapper">
+      {/* Topbar */}
+      <header className="topbar">
+        <h1 className="topbar__title">Admin Dashboard</h1>
+        <div className="flex gap-2">
           <Button
-            size="sm"
-            variant="outline"
-            className="min-w-[140px]"
+            className="btn btn--outline"
             onClick={() => navigate("/admin/models")}
           >
             ⚙️ จัดการโมเดล
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="min-w-[100px]"
-            onClick={() => logout()}
-          >
+          <Button className="btn btn--outline" onClick={logout}>
             Logout
           </Button>
         </div>
       </header>
 
-      {/* ── Filters ────────────────────────────────────────── */}
-      <Card>
-        <CardContent className="filter-form flex gap-3 flex-wrap">
-          <div className="flex flex-col">
-            <label>จากวันที่</label>
+      {/* Filter */}
+      <Card className="card">
+        <CardContent className="card__content filter-form">
+          <div className="filter-form__group">
+            <label htmlFor="from">จากวันที่</label>
             <input
+              id="from"
               type="date"
               value={dateFrom}
-              onChange={handleDate(setDateFrom)}
+              onChange={dateHandler(setDateFrom)}
             />
           </div>
-          <div className="flex flex-col">
-            <label>ถึงวันที่</label>
+          <div className="filter-form__group">
+            <label htmlFor="to">ถึงวันที่</label>
             <input
+              id="to"
               type="date"
               value={dateTo}
-              onChange={handleDate(setDateTo)}
+              onChange={dateHandler(setDateTo)}
             />
           </div>
-
           <Button
-            size="sm"
-            variant="outline"
+            className="btn btn--outline"
             onClick={() => {
               refetchRows();
               refetchBrand();
@@ -188,59 +167,65 @@ export default function AdminDashboardPage() {
           >
             🔍 Filter
           </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            fullWidth
-            onClick={downloadReport}
-          >
+          <Button className="btn btn--outline" onClick={downloadReport}>
             ⬇️ Export CSV
           </Button>
         </CardContent>
       </Card>
+      <section className="dashboard-grid">
+        {/* Chart */}
+        <Card className="card chart-card">
+          <CardContent
+            className={`card__content chart-card__container${
+              brandStats.length ? " is-ready" : ""
+            }`}
+          >
+            {brandLoading ? (
+              <p className="text-center text-sm">Loading chart…</p>
+            ) : !brandStats.length ? (
+              <p className="text-center text-sm text-muted">No data</p>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={brandStats}
+                    dataKey="total"
+                    nameKey="brand"
+                    outerRadius={110}
+                    label={({ payload }) => payload.brand}
+                  >
+                    {brandStats.map((_, i) => (
+                      <Cell key={i} fill={colors[i % colors.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </CardContent>
+        </Card>
 
-      {/* ── Brand Pie Chart ───────────────────────────────── */}
-      <Card>
-        <CardContent className="h-72">
-          {brandLoading ? (
-            <p className="text-center text-sm">Loading chart…</p>
-          ) : brandStats.length === 0 ? (
-            <p className="text-center text-sm text-muted-foreground">No data</p>
-          ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={brandStats}
-                  dataKey="total"
-                  nameKey="brand"
-                  outerRadius={110}
-                  label={({ brand }) => brand}
-                >
-                  {brandStats.map((_, i) => (
-                    <Cell key={i} fill={colors[i % colors.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* ── Table ─────────────────────────────────────────── */}
-      <Card>
-        <CardContent>
-          <AdminTable
-            data={pagedRows}
-            columns={columns}
-            keyField="id"
-            loading={rowsLoading}
-          />
-          {pageCount > 1 && (
-            <Pagination page={page} pageCount={pageCount} setPage={setPage} />
-          )}
-        </CardContent>
-      </Card>
+        {/* Table */}
+        <Card className="card">
+          <CardContent className="card__content">
+            <AdminTable
+              data={pagedRows}
+              columns={columns}
+              keyField="id"
+              loading={rowsLoading}
+              className="admin-table"
+            />
+            {pageCount > 1 && (
+              <Pagination
+                page={page}
+                pageCount={pageCount}
+                setPage={setPage}
+                className="pagination"
+              />
+            )}
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 }

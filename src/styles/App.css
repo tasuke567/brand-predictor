@@ -52,7 +52,7 @@ button {
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: .2rem;
 }
 
 .logo {
@@ -87,3 +87,50 @@ button {
     transform: rotate(360deg);
   }
 }
+/* ----- 0) no horizontal scroll anywhere ----- */
+html,body{overflow-x:hidden;}
+
+/* ----- 1) layout fix ----- */
+.layout{align-items:stretch;}          /* จาก center → stretch */
+.header{padding-block:.25rem; line-height:1.2;}
+
+/* ----- 2) progress wrapper padding ----- */
+.progress-outer{padding-inline:.25rem;}
+.progress-outer>.progress-wrapper{width:100%;}
+
+/* ----- 3) select shrink on tiny mobile ----- */
+@media (max-width:479px){
+  select,
+  .ms-trigger{min-width:0;}
+}
+
+/* ----- 4) button width tweak ----- */
+.form-submit-wrapper button{
+  width:clamp(160px,25%,220px);
+}
+
+/* 1) ให้ container กว้างเต็ม desktop แต่ยังคง max 100% mobile */
+.container{
+  max-width:960px;                  /* ใช้ margin-auto จัดกลาง 2 ข้าง */
+  width:100%;
+  margin-inline:auto;
+}
+
+/* ถ้า “อยากเต็มจอ” ให้เปลี่ยนเป็น 100% แทน */
+.container{max-width:none;}
+
+.layout{align-items:stretch;}        /* ไม่ต้อง center cross-axis */
+
+/* 2) Header padding */
+.header{
+  padding-block:.75rem;
+  padding-inline:clamp(1rem,5vw,2rem);
+}
+
+/* 3) Progress bar เว้นขอบ */
+.progress-outer{padding-inline:.5rem;}
+
+
+
+/* 5) Option wrap */
+select{white-space:normal;}
