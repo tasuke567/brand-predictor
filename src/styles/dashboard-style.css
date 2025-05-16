@@ -177,7 +177,7 @@ border-radius: var(--radius);
 }
 .chart-card__container{
   width: 100%;
-  max-width: 380px;       /* วงไม่ลีบเกิน */
+  max-width: 400px;       /* วงไม่ลีบเกิน */
   height: 360px;          /* h-72 ≈ 288 เล็กเกิน desktop */
   margin-inline: auto;    /* จัดกลางคอลัมน์ */
 }
