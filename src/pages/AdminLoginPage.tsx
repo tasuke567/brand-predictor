@@ -2,20 +2,20 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/Button";
-import { Mail, Lock } from "lucide-react";            // ไอคอนเล็ก ๆ
-
+import { Mail, Lock } from "lucide-react"; // ไอคอนเล็ก ๆ
+import "../styles/admin-login.css";
 export default function AdminLoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
-  const [pwd, setPwd]   = useState("");
-  const [err, setErr]   = useState<string | null>(null);
+  const [pwd, setPwd] = useState("");
+  const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await login(email, pwd);                       // ⬅️ redirect ภายใน hook
+      await login(email, pwd); // ⬅️ redirect ภายใน hook
     } catch (e: any) {
       setErr(e.message || "Login failed");
       setLoading(false);
@@ -23,20 +23,12 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100/60 via-emerald-100/40 to-emerald-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-700 px-4">
-      <form
-        onSubmit={submit}
-        className="w-full max-w-md rounded-3xl shadow-xl border border-gray-200/80 dark:border-slate-700 backdrop-blur-lg bg-white/80 dark:bg-slate-900/70 p-8 space-y-6 animate-fade-in"
-      >
-        <h1 className="text-2xl font-extrabold text-center tracking-tight dark:text-white">
-          Admin Login
-        </h1>
+    <main className="page-login">
+      <form onSubmit={submit} className="login-card">
+        <h1 className="">Admin Login</h1>
 
         {err && (
-          <p
-            role="alert"
-            className="flex items-start gap-2 rounded-lg bg-rose-50 dark:bg-rose-900/50 text-rose-700 dark:text-rose-200 px-4 py-3 text-sm animate-shake"
-          >
+          <p role="alert" className="alert-error">
             ❗ {err}
           </p>
         )}
@@ -44,8 +36,8 @@ export default function AdminLoginPage() {
         {/* email */}
         <label className="block">
           <span className="sr-only">Email</span>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <div className="field-wrapper">
+            <Mail className="input-icon" />
             <input
               autoFocus
               id="email"
@@ -54,16 +46,17 @@ export default function AdminLoginPage() {
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 input-base"
+              className="input-base"
             />
           </div>
         </label>
 
         {/* password */}
         <label className="block">
+          
           <span className="sr-only">Password</span>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <div className="field-wrapper">
+            <Lock className="input-icon" />
             <input
               id="password"
               type="password"
@@ -71,13 +64,13 @@ export default function AdminLoginPage() {
               placeholder="••••••••"
               value={pwd}
               onChange={(e) => setPwd(e.target.value)}
-              className="pl-10 input-base"
+              className="input-base"
             />
           </div>
         </label>
 
         {/* remember me & forgot */}
-        <div className="flex items-center justify-between text-sm">
+        <div className="remember-forgot">
           <label className="flex items-center gap-2">
             <input type="checkbox" className="accent-emerald-600 h-4 w-4" />
             <span className="select-none dark:text-slate-300">Remember me</span>
@@ -103,4 +96,3 @@ export default function AdminLoginPage() {
     </main>
   );
 }
-

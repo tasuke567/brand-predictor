@@ -49,11 +49,7 @@ button {
 .step-button:hover {
   background-color: var(--color-primary-hover);
 }
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: .2rem;
-}
+
 
 .logo {
   height: 6em;

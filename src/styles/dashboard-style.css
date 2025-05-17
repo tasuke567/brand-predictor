@@ -1,3 +1,13 @@
+body{
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem; /* base */
+  line-height: 1.6;
+  color: var(--c-text);
+  background: var(--c-bg);
+  margin: 0 auto;
+  padding: 0;
+}
+
 /* ---------- LAYOUT WRAPPERS -------------------------------------------- */
 .page-wrapper {
   max-width: 1280px;
@@ -202,10 +212,7 @@
   overflow: visible; /* ให้ label โผล่ได้ */
   box-shadow: var(--shadow-md);
 }
-html,
-body {
-  overflow-x: hidden;
-}
+
 /* ---------- container ของ <ResponsiveContainer> ---------- */
 .chart-card__container {
   width: 100%;

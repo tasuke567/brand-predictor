@@ -51,7 +51,7 @@ export default function AdminDashboardPage() {
         id: q.id,
         brand: q.prediction?.label ?? "-",
         createdAt: q.createdAt,
-        user: q.user,
+        user: q.user?.email ?? "-"
       }));
     },
   });

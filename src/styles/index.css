@@ -23,8 +23,9 @@
   --transition-fast: 0.3s ease-in-out;
 }
 
+
 body {
-  margin: 0;
+  margin: 0  ;
   padding: 0;
   font-family: "Kanit", sans-serif;
   background: var(--color-bg);
