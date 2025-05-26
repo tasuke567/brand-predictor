@@ -35,7 +35,7 @@ const PredictionResult: React.FC = () => {
 
   return (
     <div className="result-card">
-      <h2 className="result-title">ผลการพยากรณ์</h2>
+      <h2 className="result-title">ผลการแนะนำสมาร์ตโฟน</h2>
 
       <div className="result-label" style={{ color: theme.primary }}>
         {label}
@@ -54,7 +54,7 @@ const PredictionResult: React.FC = () => {
         onClick={() => navigate("/")}
         style={{ background: theme.primary }}
       >
-        🔁 พยากรณ์ใหม่
+        🔁 แนะนำสมาร์ตโฟนที่เหมาะกับคุณใหม่
       </button>
 
       {/* ---------- Feedback ---------- */}
