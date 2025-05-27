@@ -13,10 +13,7 @@ type FormData = typeof initialState;
 
 const App = () => {
   /** -------------------- state -------------------- */
-  const [formData, setFormData] = useState<FormData>(() => {
-    const saved = localStorage.getItem("smartphone-form");
-    return saved ? (JSON.parse(saved) as FormData) : initialState;
-  });
+  const [formData, setFormData] = useState<FormData>(initialState);
   const [errors, setErrors] = useState<Partial<Record<FormKey, boolean>>>({});
   const [progress, setProgress] = useState(0);
   const [showToast, setShowToast] = useState(false);
